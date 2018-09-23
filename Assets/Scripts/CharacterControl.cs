@@ -100,9 +100,6 @@ public class CharacterControl : MonoBehaviour
             if (Input.GetButtonUp("Jump") && hovering)
                 hovering = false;
 
-            if (transform.position.y < -75)
-                ResetCheckpoint();
-
             UpdateSprite();
         }
     }

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    private float topBound = 0f;
+    private float leftBound = -48f;
+    private float rightBound = 48f;
+    private float bottomBound = -54f;
+
     private float screenTransitionLength = 1f;
     private float transitionCharacterMovement = 0.7f;
     private float upwardTransitionJumpHeight = 2f;
@@ -60,7 +65,7 @@ public class CameraMovement : MonoBehaviour
         else if (moveAmount < 1)
         {
             moveAmount += Time.deltaTime / screenTransitionLength;
-            transform.position = Vector3.Lerp(moveOrigin, moveTarget, moveAmount);
+            transform.position = Vector3.Lerp(moveOrigin, moveTarget, getAdjustedMoveAmount(moveAmount));
             rb2d.Sleep();
             characterControl.hasControl = false;
 
@@ -80,10 +85,20 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
+    private float getAdjustedMoveAmount(float t)
+    {
+        return 1 - Mathf.Pow(t - 1, 2);
+    }
+
     private void setMoveTarget(float targetX, float targetY)
     {
-        moveTarget = new Vector3(transform.position.x + targetX, transform.position.y + targetY, transform.position.z);
-        moveOrigin = transform.position;
-        isMoving = true;
+        var newX = transform.position.x + targetX;
+        var newY = transform.position.y + targetY;
+        if (newX >= leftBound && newX <= rightBound && newY >= bottomBound && newY <= topBound)
+        {
+            moveTarget = new Vector3(newX, newY, transform.position.z);
+            moveOrigin = transform.position;
+            isMoving = true;
+        }
     }
 }
