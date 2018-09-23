@@ -45,8 +45,8 @@ public class CharacterControl : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        rb2d = GetComponent<Rigidbody2D>();
         checkpoint = new Vector3(0, -0.25f, 0);
+        rb2d = GetComponent<Rigidbody2D>();
         sprite = GetComponent<CharacterSprite>();
     }
 

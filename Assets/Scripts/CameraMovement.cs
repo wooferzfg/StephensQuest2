@@ -66,6 +66,7 @@ public class CameraMovement : MonoBehaviour
                 character.Translate(new Vector3(0, Time.deltaTime * upwardTransitionJumpHeight, 0));
             }
             rb2d.Sleep();
+            characterControl.hasControl = false;
         }
         else
         {
@@ -74,6 +75,7 @@ public class CameraMovement : MonoBehaviour
             rb2d.WakeUp();
             characterControl.usedDoubleJump = false;
             characterControl.usedZip = false;
+            characterControl.hasControl = true;
         }
     }
 
