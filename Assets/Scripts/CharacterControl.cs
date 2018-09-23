@@ -15,13 +15,14 @@ public class CharacterControl : MonoBehaviour {
 
     public bool hasControl = false;
 
-    public float moveForce = 25f;
+    public float moveForce = 30f;
     public float maxSpeed = 5f;
     public float jumpForce = 200f;
-    public float hoverForce = 17f;
-    public float hoverTime = 0.2f;
+    public float hoverForce = 50f;
+    public float hoverTime = 0.17f;
     public float zipForce = 1200;
     public float zipTime = 0.1f;
+    public float zipFloatTime = 0.17f;
     public float groundedDelay = 0.05f;
 
     public Vector3 checkpoint;
@@ -31,13 +32,13 @@ public class CharacterControl : MonoBehaviour {
 
     private bool grounded = false;
     private float h = 0;
-    private bool prevGrounded = false;
     private bool usedDoubleJump = true;
     private bool usedZip = true;
     private Rigidbody2D rb2d;
     private Transform mainCam;
     private float hoverRemaining = 0;
     private float zipRemaining = 0;
+    private float zipFloatRemaining = 0;
     private float groundedRemaining = 0;
     private bool firstUpdate = true;
 
@@ -64,19 +65,17 @@ public class CharacterControl : MonoBehaviour {
             bool groundBelow = Physics2D.Linecast(transform.position, transform.position + new Vector3(0, -0.3f, 0), 1 << LayerMask.NameToLayer("Ground"));
             grounded = (Physics2D.Linecast(transform.position + new Vector3(0.25f, 0, 0), transform.position + new Vector3(0.25f, -0.3f, 0), 1 << LayerMask.NameToLayer("Ground"))
                     || Physics2D.Linecast(transform.position + new Vector3(-0.25f, 0, 0), transform.position + new Vector3(-0.25f, -0.3f, 0), 1 << LayerMask.NameToLayer("Ground")))
-                    && (noWalls || groundBelow);
-
-            if (prevGrounded && !grounded)
-                groundedRemaining = groundedDelay;
-            prevGrounded = grounded;
+                    && (noWalls || groundBelow)
+                    && zipFloatRemaining <= 0;
 
             if (grounded)
             {
+                groundedRemaining = groundedDelay;
                 usedZip = false;
                 usedDoubleJump = false;
             }
 
-            if (hasControl && Input.GetButtonDown("Jump") && (grounded || groundedRemaining > 0) && canJump)
+            if (hasControl && Input.GetButtonDown("Jump") && groundedRemaining > 0 && canJump)
             {
                 jump = true;
                 hoverRemaining = hoverTime;
@@ -94,6 +93,7 @@ public class CharacterControl : MonoBehaviour {
             {
                 usedZip = true;
                 zipRemaining = zipTime;
+                zipFloatRemaining = zipFloatTime;
             }
 
             if (hasControl && Input.GetButton("Jump"))
@@ -127,6 +127,12 @@ public class CharacterControl : MonoBehaviour {
         }
         if (zipRemaining > 0)
             zipRemaining -= Time.fixedDeltaTime;
+
+        if (zipFloatRemaining > 0)
+        {
+            rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
+            zipFloatRemaining -= Time.fixedDeltaTime;
+        }
 
         if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
             rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
@@ -165,6 +171,7 @@ public class CharacterControl : MonoBehaviour {
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
+        rb2d.velocity = new Vector2(rb2d.velocity.x / 3, rb2d.velocity.y);
     }
 
     public void ResetCheckpoint()
@@ -177,6 +184,7 @@ public class CharacterControl : MonoBehaviour {
         hovering = false;
         hoverRemaining = 0;
         zipRemaining = 0;
+        zipFloatRemaining = 0;
         groundedRemaining = 0;
 }
 
