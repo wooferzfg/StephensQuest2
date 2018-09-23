@@ -17,17 +17,15 @@ public class CharacterControl : MonoBehaviour
     private bool prevHadControl = false;
 
     private float moveForce = 30f;
-
     private float maxSpeed = 5f;
-
     private float jumpForce = 200f;
-
     private float hoverForce = 50f;
     private float hoverTime = 0.17f;
     private float zipForce = 1200;
     private float zipTime = 0.1f;
     private float zipFloatTime = 0.15f;
     private float groundedDelay = 0.05f;
+    private float deathDelay = 0.25f;
 
     public Vector3 checkpoint;
     public bool canJump = false;
@@ -40,6 +38,7 @@ public class CharacterControl : MonoBehaviour
     private float zipRemaining = 0;
     private float zipFloatRemaining = 0;
     private float groundedRemaining = 0;
+    private float deathRemaining = 0;
 
     private Rigidbody2D rb2d;
     private CharacterSprite sprite;
@@ -47,7 +46,7 @@ public class CharacterControl : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        checkpoint = new Vector3(0, -0.25f, 0);
+        checkpoint = transform.position;
         rb2d = GetComponent<Rigidbody2D>();
         sprite = GetComponent<CharacterSprite>();
     }
@@ -55,7 +54,7 @@ public class CharacterControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (hasControl)
+        if (hasControl && deathRemaining <= 0)
         {
             h = Input.GetAxisRaw("Horizontal");
 
@@ -106,7 +105,7 @@ public class CharacterControl : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (hasControl)
+        if (hasControl && deathRemaining <= 0)
         {
             if (!prevHadControl)
             {
@@ -174,6 +173,8 @@ public class CharacterControl : MonoBehaviour
             savedVelocity = rb2d.velocity;
             rb2d.Sleep();
         }
+        if (deathRemaining > 0)
+            deathRemaining -= Time.fixedDeltaTime;
     }
 
     void UpdateSprite()
@@ -211,6 +212,7 @@ public class CharacterControl : MonoBehaviour
         zipRemaining = 0;
         zipFloatRemaining = 0;
         groundedRemaining = 0;
+        deathRemaining = deathDelay;
     }
 
     public void SetCheckpoint(Vector3 pos)
