@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterControl : MonoBehaviour {
+public class CharacterControl : MonoBehaviour
+{
 
     [HideInInspector]
     public int faceDirection = 1;
@@ -12,6 +13,10 @@ public class CharacterControl : MonoBehaviour {
     public bool doubleJump = false;
     [HideInInspector]
     public bool hovering = false;
+    [HideInInspector]
+    public bool usedDoubleJump = true;
+    [HideInInspector]
+    public bool usedZip = true;
 
     public bool hasControl = false;
 
@@ -32,8 +37,6 @@ public class CharacterControl : MonoBehaviour {
 
     private bool grounded = false;
     private float h = 0;
-    private bool usedDoubleJump = true;
-    private bool usedZip = true;
     private float hoverRemaining = 0;
     private float zipRemaining = 0;
     private float zipFloatRemaining = 0;
@@ -41,7 +44,6 @@ public class CharacterControl : MonoBehaviour {
     private bool firstUpdate = true;
 
     private Rigidbody2D rb2d;
-    private Transform mainCam;
     private CharacterSprite sprite;
 
     // Use this for initialization
@@ -49,7 +51,6 @@ public class CharacterControl : MonoBehaviour {
     {
         rb2d = GetComponent<Rigidbody2D>();
         checkpoint = new Vector3(0, -0.25f, 0);
-        mainCam = GameObject.Find("Main Camera").transform;
         sprite = GetComponent<CharacterSprite>();
     }
 
@@ -106,7 +107,7 @@ public class CharacterControl : MonoBehaviour {
 
             if (transform.position.y < -75)
                 ResetCheckpoint();
-            
+
             UpdateSprite();
         }
         else if (hasControl)
@@ -192,7 +193,6 @@ public class CharacterControl : MonoBehaviour {
     {
         rb2d.velocity = new Vector2(0, 0);
         transform.position = checkpoint;
-        mainCam.position = new Vector3(transform.position.x, transform.position.y, -10);
         jump = false;
         doubleJump = false;
         hovering = false;
@@ -200,7 +200,7 @@ public class CharacterControl : MonoBehaviour {
         zipRemaining = 0;
         zipFloatRemaining = 0;
         groundedRemaining = 0;
-}
+    }
 
     public void SetCheckpoint(Vector3 pos)
     {
