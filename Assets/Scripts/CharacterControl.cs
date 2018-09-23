@@ -22,7 +22,7 @@ public class CharacterControl : MonoBehaviour {
     public float hoverTime = 0.17f;
     public float zipForce = 1200;
     public float zipTime = 0.1f;
-    public float zipFloatTime = 0.17f;
+    public float zipFloatTime = 0.15f;
     public float groundedDelay = 0.05f;
 
     public Vector3 checkpoint;
@@ -34,13 +34,15 @@ public class CharacterControl : MonoBehaviour {
     private float h = 0;
     private bool usedDoubleJump = true;
     private bool usedZip = true;
-    private Rigidbody2D rb2d;
-    private Transform mainCam;
     private float hoverRemaining = 0;
     private float zipRemaining = 0;
     private float zipFloatRemaining = 0;
     private float groundedRemaining = 0;
     private bool firstUpdate = true;
+
+    private Rigidbody2D rb2d;
+    private Transform mainCam;
+    private CharacterSprite sprite;
 
     // Use this for initialization
     void Awake()
@@ -48,6 +50,7 @@ public class CharacterControl : MonoBehaviour {
         rb2d = GetComponent<Rigidbody2D>();
         checkpoint = new Vector3(0, -0.25f, 0);
         mainCam = GameObject.Find("Main Camera").transform;
+        sprite = GetComponent<CharacterSprite>();
     }
 
     // Update is called once per frame
@@ -75,14 +78,14 @@ public class CharacterControl : MonoBehaviour {
                 usedDoubleJump = false;
             }
 
-            if (hasControl && Input.GetButtonDown("Jump") && groundedRemaining > 0 && canJump)
+            if (hasControl && Input.GetButtonDown("Jump") && groundedRemaining > 0 && zipFloatRemaining <= 0 && canJump)
             {
                 jump = true;
                 hoverRemaining = hoverTime;
                 groundedRemaining = 0;
             }
 
-            if (hasControl && Input.GetButtonDown("Jump") && !grounded && !jump && !usedDoubleJump && canDoubleJump)
+            if (hasControl && Input.GetButtonDown("Jump") && !grounded && !jump && !usedDoubleJump && zipFloatRemaining <= 0 && canDoubleJump)
             {
                 doubleJump = true;
                 usedDoubleJump = true;
@@ -103,6 +106,8 @@ public class CharacterControl : MonoBehaviour {
 
             if (transform.position.y < -75)
                 ResetCheckpoint();
+            
+            UpdateSprite();
         }
         else if (hasControl)
             firstUpdate = false;
@@ -164,6 +169,15 @@ public class CharacterControl : MonoBehaviour {
         }
     }
 
+    void UpdateSprite()
+    {
+        int spriteNum = 0;
+        if (canZip && !usedZip)
+            spriteNum++;
+        if (canDoubleJump && !usedDoubleJump)
+            spriteNum++;
+        sprite.SetSprite(spriteNum);
+    }
 
     void Flip()
     {
