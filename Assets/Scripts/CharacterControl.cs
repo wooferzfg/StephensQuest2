@@ -168,11 +168,16 @@ public class CharacterControl : MonoBehaviour
 
     void UpdateSprite()
     {
+        bool doubleJumpAvailable = canDoubleJump && !usedDoubleJump;
+        bool zipAvailable = canZip && !usedZip;
+        
         int spriteNum = 0;
-        if (canZip && !usedZip)
-            spriteNum++;
-        if (canDoubleJump && !usedDoubleJump)
-            spriteNum++;
+        if (doubleJumpAvailable && zipAvailable)
+            spriteNum = 3;
+        else if (zipAvailable)
+            spriteNum = 2;
+        else if (doubleJumpAvailable)
+            spriteNum = 1;
         sprite.SetSprite(spriteNum);
     }
 
