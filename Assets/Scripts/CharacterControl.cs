@@ -12,6 +12,9 @@ public class CharacterControl : MonoBehaviour
     public bool usedZip = true;
 
     public bool hasControl = false;
+    public Vector2 savedVelocity;
+    
+    private bool prevHadControl = false;
 
     private float moveForce = 30f;
 
@@ -37,7 +40,6 @@ public class CharacterControl : MonoBehaviour
     private float zipRemaining = 0;
     private float zipFloatRemaining = 0;
     private float groundedRemaining = 0;
-    private bool firstUpdate = true;
 
     private Rigidbody2D rb2d;
     private CharacterSprite sprite;
@@ -53,12 +55,9 @@ public class CharacterControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!firstUpdate)
+        if (hasControl)
         {
-            if (hasControl)
-                h = Input.GetAxisRaw("Horizontal");
-            else
-                h = 0;
+            h = Input.GetAxisRaw("Horizontal");
 
             bool noWalls = !Physics2D.Linecast(transform.position, transform.position + new Vector3(0.3f, 0, 0), 1 << LayerMask.NameToLayer("Ground"))
                         && !Physics2D.Linecast(transform.position, transform.position + new Vector3(-0.3f, 0, 0), 1 << LayerMask.NameToLayer("Ground"));
@@ -75,30 +74,30 @@ public class CharacterControl : MonoBehaviour
                 usedDoubleJump = false;
             }
 
-            if (hasControl && Input.GetButtonDown("Jump") && groundedRemaining > 0 && zipFloatRemaining <= 0 && canJump)
+            if (Input.GetButtonDown("Jump") && groundedRemaining > 0 && zipFloatRemaining <= 0 && canJump)
             {
                 jump = true;
                 hoverRemaining = hoverTime;
                 groundedRemaining = 0;
             }
 
-            if (hasControl && Input.GetButtonDown("Jump") && !grounded && !jump && !usedDoubleJump && zipFloatRemaining <= 0 && canDoubleJump)
+            if (Input.GetButtonDown("Jump") && !grounded && !jump && !usedDoubleJump && zipFloatRemaining <= 0 && canDoubleJump)
             {
                 doubleJump = true;
                 usedDoubleJump = true;
                 hoverRemaining = hoverTime;
             }
 
-            if (hasControl && Input.GetButtonDown("Zip") && canZip && !usedZip && zipRemaining <= 0)
+            if (Input.GetButtonDown("Zip") && canZip && !usedZip && zipRemaining <= 0)
             {
                 usedZip = true;
                 zipRemaining = zipTime;
                 zipFloatRemaining = zipFloatTime;
             }
 
-            if (hasControl && Input.GetButton("Jump"))
+            if (Input.GetButton("Jump"))
                 hovering = true;
-            if (hasControl && Input.GetButtonUp("Jump") && hovering)
+            if (Input.GetButtonUp("Jump") && hovering)
                 hovering = false;
 
             if (transform.position.y < -75)
@@ -106,63 +105,77 @@ public class CharacterControl : MonoBehaviour
 
             UpdateSprite();
         }
-        else if (hasControl)
-            firstUpdate = false;
     }
 
     void FixedUpdate()
     {
-        bool canMoveAir = !Physics2D.Linecast(transform.position + new Vector3(0, 0.25f, 0), transform.position + new Vector3(0.35f * faceDirection, 0.25f, 0), 1 << LayerMask.NameToLayer("Ground"))
-            && !Physics2D.Linecast(transform.position + new Vector3(0, -0.25f, 0), transform.position + new Vector3(0.35f * faceDirection, -0.25f, 0), 1 << LayerMask.NameToLayer("Ground"));
-        bool canMoveGround = grounded && !Physics2D.Linecast(transform.position + new Vector3(0, 0, 0), transform.position + new Vector3(0.35f * faceDirection, 0, 0), 1 << LayerMask.NameToLayer("Ground"));
-        bool canMove = canMoveAir || canMoveGround;
-
-        if (h * rb2d.velocity.x < maxSpeed && canMove)
-            rb2d.AddForce(Vector2.right * h * moveForce);
-
-        if (zipRemaining > 0 && canMove)
+        if (hasControl)
         {
-            if (faceDirection > 0)
-                rb2d.AddForce(new Vector2(zipForce, 0f));
-            else
-                rb2d.AddForce(new Vector2(-zipForce, 0f));
+            if (!prevHadControl)
+            {
+                prevHadControl = true;
+                rb2d.WakeUp();
+                rb2d.velocity = savedVelocity;
+            }
+
+            bool canMoveAir = !Physics2D.Linecast(transform.position + new Vector3(0, 0.25f, 0), transform.position + new Vector3(0.35f * faceDirection, 0.25f, 0), 1 << LayerMask.NameToLayer("Ground"))
+                && !Physics2D.Linecast(transform.position + new Vector3(0, -0.25f, 0), transform.position + new Vector3(0.35f * faceDirection, -0.25f, 0), 1 << LayerMask.NameToLayer("Ground"));
+            bool canMoveGround = grounded && !Physics2D.Linecast(transform.position + new Vector3(0, 0, 0), transform.position + new Vector3(0.35f * faceDirection, 0, 0), 1 << LayerMask.NameToLayer("Ground"));
+            bool canMove = canMoveAir || canMoveGround;
+
+            if (h * rb2d.velocity.x < maxSpeed && canMove)
+                rb2d.AddForce(Vector2.right * h * moveForce);
+
+            if (zipRemaining > 0 && canMove)
+            {
+                if (faceDirection > 0)
+                    rb2d.AddForce(new Vector2(zipForce, 0f));
+                else
+                    rb2d.AddForce(new Vector2(-zipForce, 0f));
+            }
+            if (zipRemaining > 0)
+                zipRemaining -= Time.fixedDeltaTime;
+
+            if (zipFloatRemaining > 0)
+            {
+                rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
+                zipFloatRemaining -= Time.fixedDeltaTime;
+            }
+
+            if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
+                rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
+
+            if (h > 0 && faceDirection < 0)
+                Flip();
+            else if (h < 0 && faceDirection > 0)
+                Flip();
+
+            if (doubleJump)
+            {
+                rb2d.velocity = new Vector2(0, 0);
+                doubleJump = false;
+                jump = true;
+            }
+
+            if (hovering && !grounded && hoverRemaining > 0 && canJump)
+                rb2d.AddForce(new Vector2(0f, hoverForce));
+            if (hoverRemaining > 0)
+                hoverRemaining -= Time.fixedDeltaTime;
+
+            if (groundedRemaining > 0)
+                groundedRemaining -= Time.fixedDeltaTime;
+
+            if (jump)
+            {
+                rb2d.AddForce(new Vector2(0f, jumpForce));
+                jump = false;
+            }
         }
-        if (zipRemaining > 0)
-            zipRemaining -= Time.fixedDeltaTime;
-
-        if (zipFloatRemaining > 0)
+        else
         {
-            rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
-            zipFloatRemaining -= Time.fixedDeltaTime;
-        }
-
-        if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
-            rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
-
-        if (h > 0 && faceDirection < 0)
-            Flip();
-        else if (h < 0 && faceDirection > 0)
-            Flip();
-
-        if (doubleJump)
-        {
-            rb2d.velocity = new Vector2(0, 0);
-            doubleJump = false;
-            jump = true;
-        }
-
-        if (hovering && !grounded && hoverRemaining > 0 && canJump)
-            rb2d.AddForce(new Vector2(0f, hoverForce));
-        if (hoverRemaining > 0)
-            hoverRemaining -= Time.fixedDeltaTime;
-
-        if (groundedRemaining > 0)
-            groundedRemaining -= Time.fixedDeltaTime;
-
-        if (jump)
-        {
-            rb2d.AddForce(new Vector2(0f, jumpForce));
-            jump = false;
+            prevHadControl = false;
+            savedVelocity = rb2d.velocity;
+            rb2d.Sleep();
         }
     }
 
@@ -170,7 +183,7 @@ public class CharacterControl : MonoBehaviour
     {
         bool doubleJumpAvailable = canDoubleJump && !usedDoubleJump;
         bool zipAvailable = canZip && !usedZip;
-        
+
         int spriteNum = 0;
         if (doubleJumpAvailable && zipAvailable)
             spriteNum = 3;

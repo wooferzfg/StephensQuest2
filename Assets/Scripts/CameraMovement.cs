@@ -5,8 +5,8 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     private float screenTransitionLength = 1f;
-    private float transitionCharacterMovement = 1f;
-    private float upwardTransitionJumpHeight = 3f;
+    private float transitionCharacterMovement = 0.7f;
+    private float upwardTransitionJumpHeight = 2f;
 
     private Transform character;
     private Rigidbody2D rb2d;
@@ -76,8 +76,6 @@ public class CameraMovement : MonoBehaviour
             isMoving = false;
             moveAmount = 0;
             rb2d.WakeUp();
-            characterControl.usedDoubleJump = false;
-            characterControl.usedZip = false;
             characterControl.hasControl = true;
         }
     }
