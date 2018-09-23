@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     private float screenTransitionLength = 1f;
+    private float transitionCharacterMovement = 1f;
     private float upwardTransitionJumpHeight = 3f;
 
     private Transform character;
@@ -14,7 +15,6 @@ public class CameraMovement : MonoBehaviour
     private float cameraHeight;
     private float cameraWidth;
     private bool isMoving;
-    private bool movingUp;
     private float moveAmount;
     private Vector3 moveTarget;
     private Vector3 moveOrigin;
@@ -61,12 +61,15 @@ public class CameraMovement : MonoBehaviour
         {
             moveAmount += Time.deltaTime / screenTransitionLength;
             transform.position = Vector3.Lerp(moveOrigin, moveTarget, moveAmount);
-            if (movingUp)
-            {
-                character.Translate(new Vector3(0, Time.deltaTime * upwardTransitionJumpHeight, 0));
-            }
             rb2d.Sleep();
             characterControl.hasControl = false;
+
+            var moveDirection = (moveTarget - moveOrigin).normalized;
+            if (moveDirection.y > 0)
+                moveDirection *= upwardTransitionJumpHeight;
+            else
+                moveDirection *= transitionCharacterMovement;
+            character.Translate(moveDirection * Time.deltaTime);
         }
         else
         {
@@ -84,6 +87,5 @@ public class CameraMovement : MonoBehaviour
         moveTarget = new Vector3(transform.position.x + targetX, transform.position.y + targetY, transform.position.z);
         moveOrigin = transform.position;
         isMoving = true;
-        movingUp = targetY > 0;
     }
 }
