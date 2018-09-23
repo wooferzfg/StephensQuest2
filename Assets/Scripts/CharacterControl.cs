@@ -4,31 +4,27 @@ using UnityEngine;
 
 public class CharacterControl : MonoBehaviour
 {
-
-    [HideInInspector]
     public int faceDirection = 1;
-    [HideInInspector]
     public bool jump = false;
-    [HideInInspector]
     public bool doubleJump = false;
-    [HideInInspector]
     public bool hovering = false;
-    [HideInInspector]
     public bool usedDoubleJump = true;
-    [HideInInspector]
     public bool usedZip = true;
 
     public bool hasControl = false;
 
-    public float moveForce = 30f;
-    public float maxSpeed = 5f;
-    public float jumpForce = 200f;
-    public float hoverForce = 50f;
-    public float hoverTime = 0.17f;
-    public float zipForce = 1200;
-    public float zipTime = 0.1f;
-    public float zipFloatTime = 0.15f;
-    public float groundedDelay = 0.05f;
+    private float moveForce = 30f;
+
+    private float maxSpeed = 5f;
+
+    private float jumpForce = 200f;
+
+    private float hoverForce = 50f;
+    private float hoverTime = 0.17f;
+    private float zipForce = 1200;
+    private float zipTime = 0.1f;
+    private float zipFloatTime = 0.15f;
+    private float groundedDelay = 0.05f;
 
     public Vector3 checkpoint;
     public bool canJump = false;

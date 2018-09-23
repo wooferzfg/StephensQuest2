@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TouchAbility : MonoBehaviour {
+public class TouchAbility : MonoBehaviour
+{
     public int ability;
-    public GameObject checkpoint;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -15,11 +15,5 @@ public class TouchAbility : MonoBehaviour {
             charControl.SetCheckpoint(transform.position);
             Destroy(gameObject);
         }
-    }
-
-    public void SetNewGamePlus()
-    {
-        Instantiate(checkpoint, transform.position, Quaternion.identity);
-        Destroy(gameObject);
     }
 }
