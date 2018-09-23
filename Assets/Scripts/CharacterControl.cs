@@ -194,18 +194,4 @@ public class CharacterControl : MonoBehaviour {
         if (ability == 3)
             canZip = true;
     }
-
-    public void SetNewGamePlus()
-    {
-        Destroy(GameObject.Find("TutorialText2"));
-        Destroy(GameObject.Find("TutorialText3"));
-        Destroy(GameObject.Find("TutorialText4"));
-        GameObject.Find("Ability").GetComponent<TouchAbility>().SetNewGamePlus();
-        GameObject.Find("Ability1").GetComponent<TouchAbility>().SetNewGamePlus();
-       GameObject.Find("Ability2").GetComponent<TouchAbility>().SetNewGamePlus();
-
-        canJump = true;
-        canDoubleJump = true;
-        canZip = true;
-    }
 }
