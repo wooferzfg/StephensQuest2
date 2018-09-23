@@ -5,9 +5,9 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     private float topBound = 0f;
-    private float leftBound = -48f;
+    private float leftBound = -32f;
     private float rightBound = 48f;
-    private float bottomBound = -54f;
+    private float bottomBound = -45f;
 
     private float screenTransitionLength = 1f;
     private float transitionCharacterMovement = 0.7f;
