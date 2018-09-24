@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class DrawMap : MonoBehaviour
 {
     public Sprite visited;
+    public Sprite current;
     public GameObject room;
     public GameObject horizontalConnection;
     public GameObject verticalConnection;
@@ -64,7 +65,7 @@ public class DrawMap : MonoBehaviour
             }
             rooms.Add(curRow);
         }
-        rooms[curRow][curColumn].sprite = visited;
+        rooms[curRow][curColumn].sprite = current;
     }
 
     private void ToggleMap(bool enabled)
@@ -99,7 +100,8 @@ public class DrawMap : MonoBehaviour
 
 	private void AddNewVisit(int endRow, int endColumn)
 	{
-        rooms[endRow][endColumn].sprite = visited;
+        rooms[curRow][curColumn].sprite = visited;
+        rooms[endRow][endColumn].sprite = current;
         var newConnection = new Connection(curRow, curColumn, endRow, endColumn);
         if (!connections.Contains(newConnection))
         {
@@ -118,6 +120,7 @@ public class DrawMap : MonoBehaviour
         else
             connectionUI = Instantiate(horizontalConnection).GetComponent<Image>();
         connectionUI.transform.SetParent(panel);
+        connectionUI.transform.SetAsFirstSibling();
         connectionUI.rectTransform.localPosition = GetConnectionPosition(newConnection);
         connectionUI.enabled = orbCount.enabled;
         newConnection.UIElement = connectionUI;
