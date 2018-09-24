@@ -18,12 +18,12 @@ public class CharacterControl : MonoBehaviour
 
     private float moveForce = 30f;
     private float maxSpeed = 5f;
-    private float jumpForce = 200f;
-    private float hoverForce = 50f;
-    private float hoverTime = 0.17f;
+    private float jumpForce = 320f;
+    private float hoverForce = 60f;
+    private float hoverTime = 0.15f;
     private float zipForce = 1200;
-    private float zipTime = 0.1f;
-    private float zipFloatTime = 0.15f;
+    private float zipTime = 0.08f;
+    private float zipFloatTime = 0.2f;
     private float groundedDelay = 0.05f;
     private float deathDelay = 0.25f;
 
@@ -63,28 +63,33 @@ public class CharacterControl : MonoBehaviour
             bool groundBelow = Physics2D.Linecast(transform.position, transform.position + new Vector3(0, -0.3f, 0), 1 << LayerMask.NameToLayer("Ground"));
             grounded = (Physics2D.Linecast(transform.position + new Vector3(0.25f, 0, 0), transform.position + new Vector3(0.25f, -0.3f, 0), 1 << LayerMask.NameToLayer("Ground"))
                     || Physics2D.Linecast(transform.position + new Vector3(-0.25f, 0, 0), transform.position + new Vector3(-0.25f, -0.3f, 0), 1 << LayerMask.NameToLayer("Ground")))
-                    && (noWalls || groundBelow)
-                    && zipFloatRemaining <= 0;
+                    && (noWalls || groundBelow);
 
-            if (grounded)
+            if (grounded && (zipFloatRemaining <= 0 || groundedRemaining > 0))
             {
                 groundedRemaining = groundedDelay;
                 usedZip = false;
                 usedDoubleJump = false;
             }
 
-            if (Input.GetButtonDown("Jump") && groundedRemaining > 0 && zipFloatRemaining <= 0 && canJump)
+            if (Input.GetButtonDown("Jump"))
             {
-                jump = true;
-                hoverRemaining = hoverTime;
-                groundedRemaining = 0;
-            }
-
-            if (Input.GetButtonDown("Jump") && !grounded && !jump && !usedDoubleJump && zipFloatRemaining <= 0 && canDoubleJump)
-            {
-                doubleJump = true;
-                usedDoubleJump = true;
-                hoverRemaining = hoverTime;
+                if (groundedRemaining > 0 && canJump)
+                {
+                    jump = true;
+                    hoverRemaining = hoverTime;
+                    groundedRemaining = 0;
+                    if (zipRemaining > 0)
+                        zipRemaining = zipTime;
+                    zipFloatRemaining = 0;
+                }
+                else if (!grounded && !usedDoubleJump && canDoubleJump)
+                {
+                    doubleJump = true;
+                    usedDoubleJump = true;
+                    hoverRemaining = hoverTime;
+                    zipFloatRemaining = 0;
+                }
             }
 
             if (Input.GetButtonDown("Zip") && canZip && !usedZip && zipRemaining <= 0)
@@ -153,7 +158,7 @@ public class CharacterControl : MonoBehaviour
                 jump = true;
             }
 
-            if (hovering && !grounded && hoverRemaining > 0 && canJump)
+            if (hovering && !grounded && hoverRemaining > 0 && hoverRemaining <= 0.1 && canJump)
                 rb2d.AddForce(new Vector2(0f, hoverForce));
             if (hoverRemaining > 0)
                 hoverRemaining -= Time.fixedDeltaTime;
