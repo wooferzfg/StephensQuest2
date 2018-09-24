@@ -15,27 +15,29 @@ public class GameControl : MonoBehaviour
     public float endTime;
     public bool timerEnded = false;
 
-    private int totalOrbs = 4;
+    private int totalOrbs = 31;
 
     private Text timer;
     private Text finalTimer;
     private Image panel;
-    private Text orbsCollected;
     private Image title;
     private Text startGame;
     private Text orbCount;
     private CharacterControl player;
+    private DrawMap map;
 
     void Awake()
     {
         timer = GameObject.Find("Timer").GetComponent<Text>();
         finalTimer = GameObject.Find("FinalTimer").GetComponent<Text>();
         panel = GameObject.Find("Panel").GetComponent<Image>();
-        orbsCollected = GameObject.Find("OrbsGathered").GetComponent<Text>();
         player = GetComponent<CharacterControl>();
         title = GameObject.Find("Title").GetComponent<Image>();
         startGame = GameObject.Find("StartGame").GetComponent<Text>();
         orbCount = GameObject.Find("OrbCount").GetComponent<Text>();
+        map = GameObject.Find("Main Camera").GetComponent<DrawMap>();
+
+        UpdateOrbText();
 
         if (gameStarted)
             StartGame();
@@ -85,6 +87,12 @@ public class GameControl : MonoBehaviour
     public void CollectOrb()
     {
         orbs++;
+        UpdateOrbText();
+        map.Collected(RoomType.Orb);
+    }
+    
+    private void UpdateOrbText()
+    {
         orbCount.text = orbs.ToString("D2") + "/" + totalOrbs;
     }
 
@@ -93,11 +101,10 @@ public class GameControl : MonoBehaviour
         endTime = Time.time;
         timerEnded = true;
         player.hasControl = false;
+        map.Collected(RoomType.FinalOrb);
+        map.ToggleMap(true);
         panel.enabled = true;
 
         startGame.text = "Press the Restart Button to Start a New Game!";
-
-        if (orbs == totalOrbs)
-            orbsCollected.text = "All Orbs Collected";
     }
 }

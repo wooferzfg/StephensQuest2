@@ -42,12 +42,14 @@ public class CharacterControl : MonoBehaviour
 
     private Rigidbody2D rb2d;
     private CharacterSprite sprite;
+    private DrawMap map;
 
     void Awake()
     {
         checkpoint = transform.position;
         rb2d = GetComponent<Rigidbody2D>();
         sprite = GetComponent<CharacterSprite>();
+        map = GameObject.Find("Main Camera").GetComponent<DrawMap>();
     }
 
     void Update()
@@ -227,6 +229,7 @@ public class CharacterControl : MonoBehaviour
         if (ability == 3)
             canZip = true;
         if (ability == 4)
-            GameObject.Find("Main Camera").GetComponent<DrawMap>().canViewMap = true;
+            map.canViewMap = true;
+        map.Collected(RoomType.Ability);
     }
 }

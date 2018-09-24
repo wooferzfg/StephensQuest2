@@ -6,7 +6,12 @@ using UnityEngine.UI;
 public class DrawMap : MonoBehaviour
 {
     public Sprite visited;
+    public Sprite visitedOrb;
+    public Sprite visitedAbility;
     public Sprite current;
+    public Sprite currentOrb;
+    public Sprite currentAbility;
+    public Sprite rainbow;
     public GameObject room;
     public GameObject horizontalConnection;
     public GameObject verticalConnection;
@@ -17,6 +22,7 @@ public class DrawMap : MonoBehaviour
     private Image orbIcon;
     private Text orbCount;
 	private List<List<Image>> rooms;
+    private List<List<RoomType>> roomTypes;
 	private List<Connection> connections;
     private int gridWidth = 6;
     private int gridHeight = 6;
@@ -51,9 +57,11 @@ public class DrawMap : MonoBehaviour
     {
         connections = new List<Connection>();
         rooms = new List<List<Image>>();
+        roomTypes = new List<List<RoomType>>();
         for (var i = 0; i < gridHeight; i++)
         {
             var curRow = new List<Image>();
+            var curRoomTypeRow = new List<RoomType>();
             for (var j = 0; j < gridWidth; j++)
             {
                 var curRoom = Instantiate(room);
@@ -62,13 +70,15 @@ public class DrawMap : MonoBehaviour
                 roomImage.rectTransform.localPosition = GetRoomPosition(i, j);
                 roomImage.enabled = false;
                 curRow.Add(roomImage);
+                curRoomTypeRow.Add(RoomType.None);
             }
             rooms.Add(curRow);
+            roomTypes.Add(curRoomTypeRow);
         }
-        rooms[curRow][curColumn].sprite = current;
+        UpdateRoomSprite(curRow, curColumn, true);
     }
 
-    private void ToggleMap(bool enabled)
+    public void ToggleMap(bool enabled)
     {
         for (var i = 0; i < gridHeight; i++)
         {
@@ -100,17 +110,40 @@ public class DrawMap : MonoBehaviour
 
 	private void AddNewVisit(int endRow, int endColumn)
 	{
-        rooms[curRow][curColumn].sprite = visited;
-        rooms[endRow][endColumn].sprite = current;
-        var newConnection = new Connection(curRow, curColumn, endRow, endColumn);
-        if (!connections.Contains(newConnection))
+        if (endRow >= 0 && endRow < gridHeight && endColumn >= 0 && endColumn < gridWidth)
         {
-            connections.Add(newConnection);
-            AddConnectionUI(newConnection);
+            UpdateRoomSprite(curRow, curColumn, false);
+            UpdateRoomSprite(endRow, endColumn, true);
+            var newConnection = new Connection(curRow, curColumn, endRow, endColumn);
+            if (!connections.Contains(newConnection))
+            {
+                connections.Add(newConnection);
+                AddConnectionUI(newConnection);
+            }
+            curRow = endRow;
+            curColumn = endColumn;
         }
-        curRow = endRow;
-        curColumn = endColumn;
 	}
+
+    private void UpdateRoomSprite(int row, int column, bool currentRoom)
+    {
+        var roomImage = rooms[row][column];
+        switch(roomTypes[row][column])
+        {
+            case RoomType.None:
+                roomImage.sprite = currentRoom ? current : visited;
+                break;
+            case RoomType.Orb:
+                roomImage.sprite = currentRoom ? currentOrb : visitedOrb;
+                break;
+            case RoomType.Ability:
+                roomImage.sprite = currentRoom ? currentAbility : visitedAbility;
+                break;
+            case RoomType.FinalOrb:
+                roomImage.sprite = rainbow;
+                break;
+        }
+    }
 
     private void AddConnectionUI(Connection newConnection)
     {
@@ -149,6 +182,12 @@ public class DrawMap : MonoBehaviour
         int newRow = curRow + 1;
         AddNewVisit(newRow, curColumn);
     }
+
+    public void Collected(RoomType item)
+    {
+        roomTypes[curRow][curColumn] = item;
+        UpdateRoomSprite(curRow, curColumn, true);
+    }
 }
 
 public class Connection
@@ -179,4 +218,9 @@ public class Connection
             && EndRow == other.EndRow
             && EndColumn == other.EndColumn;
     }
+}
+
+public enum RoomType
+{
+    None, Orb, Ability, FinalOrb
 }
