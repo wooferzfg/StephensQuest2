@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TouchFinalOrb : MonoBehaviour {
-
+public class TouchFinalOrb : MonoBehaviour
+{
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name == "Character")

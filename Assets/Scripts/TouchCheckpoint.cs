@@ -8,6 +8,7 @@ public class TouchCheckpoint : MonoBehaviour
     {
         GetComponent<SpriteRenderer>().sprite = null;
     }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name == "Character")

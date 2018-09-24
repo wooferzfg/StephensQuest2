@@ -16,6 +16,7 @@ public class CameraMovement : MonoBehaviour
     private Transform character;
     private Rigidbody2D rb2d;
     private CharacterControl characterControl;
+    private DrawMap map;
 
     private float cameraHeight;
     private float cameraWidth;
@@ -24,12 +25,12 @@ public class CameraMovement : MonoBehaviour
     private Vector3 moveTarget;
     private Vector3 moveOrigin;
 
-    // Use this for initialization
     void Awake()
     {
         character = GameObject.Find("Character").transform;
         rb2d = character.GetComponent<Rigidbody2D>();
         characterControl = character.GetComponent<CharacterControl>();
+        map = GetComponent<DrawMap>();
         setCameraSize();
     }
 
@@ -40,7 +41,6 @@ public class CameraMovement : MonoBehaviour
         cameraWidth = camera.orthographicSize * 16f / 9;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!isMoving)
@@ -48,18 +48,22 @@ public class CameraMovement : MonoBehaviour
             if (character.position.x > transform.position.x + cameraWidth)
             {
                 setMoveTarget(cameraWidth * 2, 0);
+                map.MoveRight();
             }
             else if (character.position.x < transform.position.x - cameraWidth)
             {
                 setMoveTarget(-cameraWidth * 2, 0);
+                map.MoveLeft();
             }
             else if (character.position.y > transform.position.y + cameraHeight)
             {
                 setMoveTarget(0, cameraHeight * 2);
+                map.MoveUp();
             }
             else if (character.position.y < transform.position.y - cameraHeight)
             {
                 setMoveTarget(0, -cameraHeight * 2);
+                map.MoveDown();
             }
         }
         else if (moveAmount < 1)

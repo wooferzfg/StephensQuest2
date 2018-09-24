@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TouchSpike : MonoBehaviour {
-
+public class TouchSpike : MonoBehaviour
+{
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name == "Character")

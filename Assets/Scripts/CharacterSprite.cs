@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterSprite : MonoBehaviour {
-
+public class CharacterSprite : MonoBehaviour
+{
 	public List<Sprite> sprites;
 	public int curSprite;
 	public GameObject shadow;
@@ -12,12 +12,14 @@ public class CharacterSprite : MonoBehaviour {
 	private float timeBetweenShadows = 0.05f;
 	private float timeRemaining;
 
-	void Start() {
+	void Start()
+    {
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		timeRemaining = timeBetweenShadows;
 	}
 
-	void Update() {
+	void Update()
+    {
 		timeRemaining -= Time.deltaTime;
 		if (timeRemaining <= 0)
 		{
@@ -27,7 +29,8 @@ public class CharacterSprite : MonoBehaviour {
 		}
 	}
 
-	public void SetSprite(int spriteNum) {
+	public void SetSprite(int spriteNum)
+    {
 		spriteRenderer.sprite = sprites[spriteNum];
 	}
 }

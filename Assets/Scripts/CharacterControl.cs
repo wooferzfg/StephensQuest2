@@ -43,7 +43,6 @@ public class CharacterControl : MonoBehaviour
     private Rigidbody2D rb2d;
     private CharacterSprite sprite;
 
-    // Use this for initialization
     void Awake()
     {
         checkpoint = transform.position;
@@ -51,7 +50,6 @@ public class CharacterControl : MonoBehaviour
         sprite = GetComponent<CharacterSprite>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (hasControl && deathRemaining <= 0)
@@ -228,5 +226,7 @@ public class CharacterControl : MonoBehaviour
             canDoubleJump = true;
         if (ability == 3)
             canZip = true;
+        if (ability == 4)
+            GameObject.Find("Main Camera").GetComponent<DrawMap>().canViewMap = true;
     }
 }
