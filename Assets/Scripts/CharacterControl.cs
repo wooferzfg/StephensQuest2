@@ -6,7 +6,6 @@ public class CharacterControl : MonoBehaviour
 {
     public int faceDirection = 1;
     public bool jump = false;
-    public bool doubleJump = false;
     public bool hovering = false;
     public bool usedDoubleJump = true;
     public bool usedZip = true;
@@ -77,19 +76,16 @@ public class CharacterControl : MonoBehaviour
             {
                 if (groundedRemaining > 0 && canJump)
                 {
-                    jump = true;
-                    hoverRemaining = hoverTime;
-                    groundedRemaining = 0;
-                    if (zipRemaining > 0)
+                    doJump();
+                    if (zipRemaining > 0 && h != 0)
                         zipRemaining += hyperZipTime;
-                    zipFloatRemaining = 0;
+                    else
+                        zipRemaining = 0;
                 }
                 else if (!grounded && !usedDoubleJump && canDoubleJump)
                 {
-                    doubleJump = true;
+                    doJump();
                     usedDoubleJump = true;
-                    hoverRemaining = hoverTime;
-                    zipFloatRemaining = 0;
                 }
             }
 
@@ -107,6 +103,14 @@ public class CharacterControl : MonoBehaviour
 
             UpdateSprite();
         }
+    }
+
+    private void doJump()
+    {
+        jump = true;
+        hoverRemaining = hoverTime;
+        groundedRemaining = 0;
+        zipFloatRemaining = 0;
     }
 
     void FixedUpdate()
@@ -147,17 +151,8 @@ public class CharacterControl : MonoBehaviour
             if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
                 rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
 
-            if (h > 0 && faceDirection < 0)
+            if (h != 0 && h != faceDirection)
                 Flip();
-            else if (h < 0 && faceDirection > 0)
-                Flip();
-
-            if (doubleJump)
-            {
-                rb2d.velocity = new Vector2(0, 0);
-                doubleJump = false;
-                jump = true;
-            }
 
             if (hovering && !grounded && hoverRemaining > 0 && hoverRemaining <= 0.1 && canJump)
                 rb2d.AddForce(new Vector2(0f, hoverForce));
@@ -169,6 +164,10 @@ public class CharacterControl : MonoBehaviour
 
             if (jump)
             {
+                if (h == 0)
+                    rb2d.velocity = new Vector2(0, 0);
+                else
+                    rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
                 rb2d.AddForce(new Vector2(0f, jumpForce));
                 jump = false;
             }
@@ -212,7 +211,6 @@ public class CharacterControl : MonoBehaviour
         rb2d.velocity = new Vector2(0, 0);
         transform.position = checkpoint;
         jump = false;
-        doubleJump = false;
         hovering = false;
         hoverRemaining = 0;
         zipRemaining = 0;
