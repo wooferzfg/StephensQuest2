@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Shadow : MonoBehaviour {
 	private SpriteRenderer sprite;
-	private float initialAlpha = 0.15f;
-	private float fadeRate = 1f;
+	private float initialAlpha = 0.075f;
+	private float fadeRate = 0.5f;
 
 	void Awake () {
 		sprite = GetComponent<SpriteRenderer>();
