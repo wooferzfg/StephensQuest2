@@ -17,6 +17,7 @@ public class CharacterControl : MonoBehaviour
 
     private float moveForce = 30f;
     private float maxSpeed = 5f;
+    private float speedDecay = 0.4f;
     private float jumpForce = 320f;
     private float hoverForce = 60f;
     private float hoverTime = 0.15f;
@@ -187,7 +188,7 @@ public class CharacterControl : MonoBehaviour
         var curSpeed = Mathf.Abs(rb2d.velocity.x);
         if (curSpeed > maxSpeed)
         {
-            var adjustedSpeed = Mathf.Lerp(maxSpeed, curSpeed, 0.4f);
+            var adjustedSpeed = Mathf.Lerp(maxSpeed, curSpeed, speedDecay);
             if (adjustedSpeed <= maxSpeed + 1)
                 adjustedSpeed = maxSpeed;
             rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * adjustedSpeed, rb2d.velocity.y);
