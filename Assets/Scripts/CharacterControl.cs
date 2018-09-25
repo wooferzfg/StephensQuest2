@@ -16,7 +16,8 @@ public class CharacterControl : MonoBehaviour
     private bool prevHadControl = false;
 
     private float moveForce = 30f;
-    private float maxSpeed = 5f;
+    private float maxHorizontalSpeed = 5f;
+    private float maxVerticalSpeed = 12f;
     private float speedDecay = 0.4f;
     private float jumpForce = 320f;
     private float hoverForce = 60f;
@@ -130,7 +131,7 @@ public class CharacterControl : MonoBehaviour
             bool canMoveGround = grounded && !Physics2D.Linecast(transform.position + new Vector3(0, 0, 0), transform.position + new Vector3(0.35f * faceDirection, 0, 0), 1 << LayerMask.NameToLayer("Ground"));
             bool canMove = canMoveAir || canMoveGround;
 
-            if (h * rb2d.velocity.x < maxSpeed && canMove)
+            if (h * rb2d.velocity.x < maxHorizontalSpeed && canMove)
                 rb2d.AddForce(Vector2.right * h * moveForce);
 
             if (dashRemaining > 0 && canMove)
@@ -188,14 +189,20 @@ public class CharacterControl : MonoBehaviour
 
     private void CapSpeed()
     {
-        var curSpeed = Mathf.Abs(rb2d.velocity.x);
-        if (curSpeed > maxSpeed)
+        var horizontalSpeed = Mathf.Abs(rb2d.velocity.x);
+        var verticalSpeed = Mathf.Abs(rb2d.velocity.y);
+        if (horizontalSpeed > maxHorizontalSpeed)
         {
-            var adjustedSpeed = Mathf.Lerp(maxSpeed, curSpeed, speedDecay);
-            if (adjustedSpeed <= maxSpeed + 1)
-                adjustedSpeed = maxSpeed;
-            rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * adjustedSpeed, rb2d.velocity.y);
+            horizontalSpeed = Mathf.Lerp(maxHorizontalSpeed, horizontalSpeed, speedDecay);
+            if (horizontalSpeed <= maxHorizontalSpeed + 1)
+                horizontalSpeed = maxHorizontalSpeed;
         }
+        if (verticalSpeed > maxVerticalSpeed)
+        {
+            verticalSpeed = maxVerticalSpeed;
+        }
+        rb2d.velocity = new Vector2(horizontalSpeed * Mathf.Sign(rb2d.velocity.x),
+                                    verticalSpeed * Mathf.Sign(rb2d.velocity.y));
     }
 
     void UpdateSprite()
