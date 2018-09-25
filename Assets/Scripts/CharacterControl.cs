@@ -8,7 +8,7 @@ public class CharacterControl : MonoBehaviour
     public bool jump = false;
     public bool hovering = false;
     public bool usedDoubleJump = true;
-    public bool usedZip = true;
+    public bool usedDash = true;
 
     public bool hasControl = false;
     public Vector2 savedVelocity;
@@ -21,23 +21,23 @@ public class CharacterControl : MonoBehaviour
     private float jumpForce = 320f;
     private float hoverForce = 60f;
     private float hoverTime = 0.15f;
-    private float zipForce = 800;
-    private float zipTime = 0.08f;
-    private float zipFloatTime = 0.2f;
-    private float hyperZipTime = 0.06f;
+    private float dashForce = 800;
+    private float dashTime = 0.08f;
+    private float dashFloatTime = 0.2f;
+    private float hyperDashTime = 0.06f;
     private float groundedDelay = 0.05f;
     private float deathDelay = 0.25f;
 
     public Vector3 checkpoint;
     public bool canJump = false;
     public bool canDoubleJump = false;
-    public bool canZip = false;
+    public bool canDash = false;
 
     private bool grounded = false;
     private float h = 0;
     private float hoverRemaining = 0;
-    private float zipRemaining = 0;
-    private float zipFloatRemaining = 0;
+    private float dashRemaining = 0;
+    private float dashFloatRemaining = 0;
     private float groundedRemaining = 0;
     private float deathRemaining = 0;
 
@@ -66,10 +66,10 @@ public class CharacterControl : MonoBehaviour
                     || Physics2D.Linecast(transform.position + new Vector3(-0.25f, 0, 0), transform.position + new Vector3(-0.25f, -0.3f, 0), 1 << LayerMask.NameToLayer("Ground")))
                     && (noWalls || groundBelow);
 
-            if (grounded && (zipFloatRemaining <= 0 || groundedRemaining > 0))
+            if (grounded && (dashFloatRemaining <= 0 || groundedRemaining > 0))
             {
                 groundedRemaining = groundedDelay;
-                usedZip = false;
+                usedDash = false;
                 usedDoubleJump = false;
             }
 
@@ -78,10 +78,10 @@ public class CharacterControl : MonoBehaviour
                 if (groundedRemaining > 0 && canJump)
                 {
                     DoJump();
-                    if (zipRemaining > 0 && h != 0)
-                        zipRemaining += hyperZipTime;
+                    if (dashRemaining > 0 && h != 0)
+                        dashRemaining += hyperDashTime;
                     else
-                        zipRemaining = 0;
+                        dashRemaining = 0;
                 }
                 else if (!grounded && !usedDoubleJump && canDoubleJump)
                 {
@@ -90,11 +90,11 @@ public class CharacterControl : MonoBehaviour
                 }
             }
 
-            if (Input.GetButtonDown("Zip") && canZip && !usedZip && zipRemaining <= 0)
+            if (Input.GetButtonDown("Dash") && canDash && !usedDash && dashRemaining <= 0)
             {
-                usedZip = true;
-                zipRemaining = zipTime;
-                zipFloatRemaining = zipFloatTime;
+                usedDash = true;
+                dashRemaining = dashTime;
+                dashFloatRemaining = dashFloatTime;
             }
 
             if (Input.GetButton("Jump"))
@@ -111,7 +111,7 @@ public class CharacterControl : MonoBehaviour
         jump = true;
         hoverRemaining = hoverTime;
         groundedRemaining = 0;
-        zipFloatRemaining = 0;
+        dashFloatRemaining = 0;
     }
 
     void FixedUpdate()
@@ -133,21 +133,21 @@ public class CharacterControl : MonoBehaviour
             if (h * rb2d.velocity.x < maxSpeed && canMove)
                 rb2d.AddForce(Vector2.right * h * moveForce);
 
-            if (zipRemaining > 0 && canMove)
+            if (dashRemaining > 0 && canMove)
             {
-                var adjustedZipForce = Mathf.Min(zipForce, zipRemaining / zipTime * zipForce);
+                var adjustedDashForce = Mathf.Min(dashForce, dashRemaining / dashTime * dashForce);
                 if (faceDirection > 0)
-                    rb2d.AddForce(new Vector2(adjustedZipForce, 0f));
+                    rb2d.AddForce(new Vector2(adjustedDashForce, 0f));
                 else
-                    rb2d.AddForce(new Vector2(-adjustedZipForce, 0f));
+                    rb2d.AddForce(new Vector2(-adjustedDashForce, 0f));
             }
-            if (zipRemaining > 0)
-                zipRemaining -= Time.fixedDeltaTime;
+            if (dashRemaining > 0)
+                dashRemaining -= Time.fixedDeltaTime;
 
-            if (zipFloatRemaining > 0)
+            if (dashFloatRemaining > 0)
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
-                zipFloatRemaining -= Time.fixedDeltaTime;
+                dashFloatRemaining -= Time.fixedDeltaTime;
             }
 
             CapSpeed();
@@ -198,12 +198,12 @@ public class CharacterControl : MonoBehaviour
     void UpdateSprite()
     {
         bool doubleJumpAvailable = canDoubleJump && !usedDoubleJump;
-        bool zipAvailable = canZip && !usedZip;
+        bool dashAvailable = canDash && !usedDash;
 
         int spriteNum = 0;
-        if (doubleJumpAvailable && zipAvailable)
+        if (doubleJumpAvailable && dashAvailable)
             spriteNum = 3;
-        else if (zipAvailable)
+        else if (dashAvailable)
             spriteNum = 2;
         else if (doubleJumpAvailable)
             spriteNum = 1;
@@ -226,8 +226,8 @@ public class CharacterControl : MonoBehaviour
         jump = false;
         hovering = false;
         hoverRemaining = 0;
-        zipRemaining = 0;
-        zipFloatRemaining = 0;
+        dashRemaining = 0;
+        dashFloatRemaining = 0;
         groundedRemaining = 0;
         deathRemaining = deathDelay;
     }
@@ -244,7 +244,7 @@ public class CharacterControl : MonoBehaviour
         if (ability == 2)
             canDoubleJump = true;
         if (ability == 3)
-            canZip = true;
+            canDash = true;
         if (ability == 4)
             map.canViewMap = true;
         map.Collected(RoomType.Ability);
