@@ -77,6 +77,8 @@ public class CameraMovement : MonoBehaviour
             isMoving = false;
             moveAmount = 0;
             characterControl.hasControl = true;
+            characterControl.usedDash = false;
+            characterControl.usedDoubleJump = false;
         }
     }
 
