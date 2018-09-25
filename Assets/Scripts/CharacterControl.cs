@@ -175,8 +175,11 @@ public class CharacterControl : MonoBehaviour
         }
         else
         {
-            prevHadControl = false;
-            savedVelocity = rb2d.velocity;
+            if (prevHadControl)
+            {
+                prevHadControl = false;
+                savedVelocity = rb2d.velocity;
+            }
             rb2d.Sleep();
         }
         if (deathRemaining > 0)

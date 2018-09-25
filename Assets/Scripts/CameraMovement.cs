@@ -14,7 +14,6 @@ public class CameraMovement : MonoBehaviour
     private float upwardTransitionJumpHeight = 2f;
 
     private Transform character;
-    private Rigidbody2D rb2d;
     private CharacterControl characterControl;
     private DrawMap map;
 
@@ -28,7 +27,6 @@ public class CameraMovement : MonoBehaviour
     void Awake()
     {
         character = GameObject.Find("Character").transform;
-        rb2d = character.GetComponent<Rigidbody2D>();
         characterControl = character.GetComponent<CharacterControl>();
         map = GetComponent<DrawMap>();
         setCameraSize();
@@ -70,7 +68,6 @@ public class CameraMovement : MonoBehaviour
         {
             moveAmount += Time.deltaTime / screenTransitionLength;
             transform.position = Vector3.Lerp(moveOrigin, moveTarget, getAdjustedMoveAmount(moveAmount));
-            rb2d.Sleep();
             characterControl.hasControl = false;
 
             var moveDirection = (moveTarget - moveOrigin).normalized;
@@ -84,7 +81,6 @@ public class CameraMovement : MonoBehaviour
         {
             isMoving = false;
             moveAmount = 0;
-            rb2d.WakeUp();
             characterControl.hasControl = true;
         }
     }
