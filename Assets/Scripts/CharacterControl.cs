@@ -24,6 +24,7 @@ public class CharacterControl : MonoBehaviour
     private float zipForce = 1200;
     private float zipTime = 0.08f;
     private float zipFloatTime = 0.2f;
+    private float hyperZipTime = 0.06f;
     private float groundedDelay = 0.05f;
     private float deathDelay = 0.25f;
 
@@ -80,7 +81,7 @@ public class CharacterControl : MonoBehaviour
                     hoverRemaining = hoverTime;
                     groundedRemaining = 0;
                     if (zipRemaining > 0)
-                        zipRemaining = zipTime;
+                        zipRemaining += hyperZipTime;
                     zipFloatRemaining = 0;
                 }
                 else if (!grounded && !usedDoubleJump && canDoubleJump)
