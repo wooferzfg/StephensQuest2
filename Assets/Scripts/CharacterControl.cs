@@ -134,10 +134,11 @@ public class CharacterControl : MonoBehaviour
 
             if (zipRemaining > 0 && canMove)
             {
+                var adjustedZipForce = Mathf.Min(zipForce, zipRemaining / zipTime * zipForce);
                 if (faceDirection > 0)
-                    rb2d.AddForce(new Vector2(zipForce, 0f));
+                    rb2d.AddForce(new Vector2(adjustedZipForce, 0f));
                 else
-                    rb2d.AddForce(new Vector2(-zipForce, 0f));
+                    rb2d.AddForce(new Vector2(-adjustedZipForce, 0f));
             }
             if (zipRemaining > 0)
                 zipRemaining -= Time.fixedDeltaTime;
@@ -186,7 +187,7 @@ public class CharacterControl : MonoBehaviour
         var curSpeed = Mathf.Abs(rb2d.velocity.x);
         if (curSpeed > maxSpeed)
         {
-            var adjustedSpeed = Mathf.Lerp(maxSpeed, curSpeed, 0.3f);
+            var adjustedSpeed = Mathf.Lerp(maxSpeed, curSpeed, 0.4f);
             if (adjustedSpeed <= maxSpeed + 1)
                 adjustedSpeed = maxSpeed;
             rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * adjustedSpeed, rb2d.velocity.y);
