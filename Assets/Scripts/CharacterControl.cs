@@ -15,6 +15,7 @@ public class CharacterControl : MonoBehaviour
     
     private bool prevHadControl = false;
 
+    private float gravityScale = 3f;
     private float moveForce = 30f;
     private float maxHorizontalSpeed = 5f;
     private float maxVerticalSpeed = 12f;
@@ -124,6 +125,7 @@ public class CharacterControl : MonoBehaviour
                 prevHadControl = true;
                 rb2d.WakeUp();
                 rb2d.velocity = savedVelocity;
+                rb2d.gravityScale = gravityScale;
             }
 
             bool canMoveAir = !Physics2D.Linecast(transform.position + new Vector3(0, 0.25f, 0), transform.position + new Vector3(0.35f * faceDirection, 0.25f, 0), 1 << LayerMask.NameToLayer("Ground"))
@@ -182,6 +184,7 @@ public class CharacterControl : MonoBehaviour
                 savedVelocity = rb2d.velocity;
             }
             rb2d.Sleep();
+            rb2d.gravityScale = 0;
         }
         if (deathRemaining > 0)
             deathRemaining -= Time.fixedDeltaTime;
