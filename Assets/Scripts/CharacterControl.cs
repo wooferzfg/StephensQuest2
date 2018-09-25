@@ -20,7 +20,7 @@ public class CharacterControl : MonoBehaviour
     private float jumpForce = 320f;
     private float hoverForce = 60f;
     private float hoverTime = 0.15f;
-    private float zipForce = 1200;
+    private float zipForce = 800;
     private float zipTime = 0.08f;
     private float zipFloatTime = 0.2f;
     private float hyperZipTime = 0.06f;
@@ -76,7 +76,7 @@ public class CharacterControl : MonoBehaviour
             {
                 if (groundedRemaining > 0 && canJump)
                 {
-                    doJump();
+                    DoJump();
                     if (zipRemaining > 0 && h != 0)
                         zipRemaining += hyperZipTime;
                     else
@@ -84,7 +84,7 @@ public class CharacterControl : MonoBehaviour
                 }
                 else if (!grounded && !usedDoubleJump && canDoubleJump)
                 {
-                    doJump();
+                    DoJump();
                     usedDoubleJump = true;
                 }
             }
@@ -105,7 +105,7 @@ public class CharacterControl : MonoBehaviour
         }
     }
 
-    private void doJump()
+    private void DoJump()
     {
         jump = true;
         hoverRemaining = hoverTime;
@@ -148,8 +148,7 @@ public class CharacterControl : MonoBehaviour
                 zipFloatRemaining -= Time.fixedDeltaTime;
             }
 
-            if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
-                rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
+            CapSpeed();
 
             if (h != 0 && h != faceDirection)
                 Flip();
@@ -180,6 +179,18 @@ public class CharacterControl : MonoBehaviour
         }
         if (deathRemaining > 0)
             deathRemaining -= Time.fixedDeltaTime;
+    }
+
+    private void CapSpeed()
+    {
+        var curSpeed = Mathf.Abs(rb2d.velocity.x);
+        if (curSpeed > maxSpeed)
+        {
+            var adjustedSpeed = Mathf.Lerp(maxSpeed, curSpeed, 0.3f);
+            if (adjustedSpeed <= maxSpeed + 1)
+                adjustedSpeed = maxSpeed;
+            rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * adjustedSpeed, rb2d.velocity.y);
+        }
     }
 
     void UpdateSprite()
