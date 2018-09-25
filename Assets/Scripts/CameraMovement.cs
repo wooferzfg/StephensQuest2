@@ -96,8 +96,8 @@ public class CameraMovement : MonoBehaviour
 
     private void setMoveTarget(float targetX, float targetY)
     {
-        var newX = transform.position.x + targetX;
-        var newY = transform.position.y + targetY;
+        var newX = Mathf.Round(transform.position.x + targetX);
+        var newY = Mathf.Round(transform.position.y + targetY);
         if (newX >= leftBound && newX <= rightBound && newY >= bottomBound && newY <= topBound)
         {
             moveTarget = new Vector3(newX, newY, transform.position.z);
