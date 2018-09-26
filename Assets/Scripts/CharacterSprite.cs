@@ -9,7 +9,7 @@ public class CharacterSprite : MonoBehaviour
     public GameObject shadow;
     
     private SpriteRenderer spriteRenderer;
-    private float timeBetweenShadows = 0.03f;
+    private float timeBetweenShadows = 1/60f;
     private float timeRemaining;
 
     void Start()
