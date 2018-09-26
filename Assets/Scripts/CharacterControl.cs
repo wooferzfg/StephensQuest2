@@ -15,7 +15,7 @@ public class CharacterControl : MonoBehaviour
     
     private bool prevHadControl = false;
 
-    private float gravityScale = 3f;
+    private float gravityScale = 2.6f;
     private float moveForce = 30f;
     private float maxHorizontalSpeed = 5f;
     private float maxVerticalSpeed = 12f;
