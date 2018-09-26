@@ -71,8 +71,9 @@ public class CharacterControl : MonoBehaviour
             if (grounded && (dashFloatRemaining <= 0 || groundedRemaining > 0))
             {
                 groundedRemaining = groundedDelay;
-                usedDash = false;
                 usedDoubleJump = false;
+                if (dashRemaining <= 0)
+                    usedDash = false;
             }
 
             if (Input.GetButtonDown("Jump"))
@@ -80,6 +81,7 @@ public class CharacterControl : MonoBehaviour
                 if (groundedRemaining > 0 && canJump)
                 {
                     DoJump();
+                    usedDash = false;
                     if (dashRemaining > 0 && h != 0)
                         dashRemaining += hyperDashTime;
                     else
