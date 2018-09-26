@@ -21,22 +21,22 @@ public class DrawMap : MonoBehaviour
     private GameControl game;
     private Image orbIcon;
     private Text orbCount;
-	private List<List<Image>> rooms;
+    private List<List<Image>> rooms;
     private List<List<RoomType>> roomTypes;
-	private List<Connection> connections;
+    private List<Connection> connections;
     private int gridWidth = 6;
     private int gridHeight = 6;
     private int curRow = 0;
     private int curColumn = 2;
 
-	void Awake ()
+    void Awake ()
     {
         panel = GameObject.Find("Panel").transform;
         game = GameObject.Find("Character").GetComponent<GameControl>();
         orbIcon = GameObject.Find("OrbIcon").GetComponent<Image>();
         orbCount = GameObject.Find("OrbCount").GetComponent<Text>();
         InitializeRooms();
-	}
+    }
 
     void Update()
     {
@@ -108,8 +108,8 @@ public class DrawMap : MonoBehaviour
                             0.5f);
     }
 
-	private void AddNewVisit(int endRow, int endColumn)
-	{
+    private void AddNewVisit(int endRow, int endColumn)
+    {
         if (endRow >= 0 && endRow < gridHeight && endColumn >= 0 && endColumn < gridWidth)
         {
             UpdateRoomSprite(curRow, curColumn, false);
@@ -123,7 +123,7 @@ public class DrawMap : MonoBehaviour
             curRow = endRow;
             curColumn = endColumn;
         }
-	}
+    }
 
     private void UpdateRoomSprite(int row, int column, bool currentRoom)
     {
@@ -192,19 +192,19 @@ public class DrawMap : MonoBehaviour
 
 public class Connection
 {
-	public int StartRow { get; private set; }
-	public int StartColumn { get; private set; }
-	public int EndRow { get; private set; }
-	public int EndColumn { get; private set; }
+    public int StartRow { get; private set; }
+    public int StartColumn { get; private set; }
+    public int EndRow { get; private set; }
+    public int EndColumn { get; private set; }
     public Image UIElement { get; set; }
 
-	public Connection(int startRow, int startColumn, int endRow, int endColumn)
-	{
-		StartRow = startRow;
-		StartColumn = startColumn;
-		EndRow = endRow;
-		EndColumn = endColumn;
-	}
+    public Connection(int startRow, int startColumn, int endRow, int endColumn)
+    {
+        StartRow = startRow;
+        StartColumn = startColumn;
+        EndRow = endRow;
+        EndColumn = endColumn;
+    }
 
     public override bool Equals(object obj)
     {
