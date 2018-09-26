@@ -9,23 +9,28 @@ public class CharacterSprite : MonoBehaviour
     public GameObject shadow;
     
     private SpriteRenderer spriteRenderer;
-    private float timeBetweenShadows = 1/60f;
+    private CharacterControl character;
+    private float timeBetweenShadows = 0.05f;
     private float timeRemaining;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        character = GetComponent<CharacterControl>();
         timeRemaining = timeBetweenShadows;
     }
 
     void Update()
     {
-        timeRemaining -= Time.deltaTime;
-        if (timeRemaining <= 0)
+        if (character.hasControl)
         {
-            timeRemaining += timeBetweenShadows;
-            var newShadow = Instantiate(shadow, transform.position, Quaternion.identity);
-            newShadow.GetComponent<SpriteRenderer>().sprite = spriteRenderer.sprite;
+            timeRemaining -= Time.deltaTime;
+            if (timeRemaining <= 0)
+            {
+                timeRemaining += timeBetweenShadows;
+                var newShadow = Instantiate(shadow, transform.position, Quaternion.identity);
+                newShadow.GetComponent<SpriteRenderer>().sprite = spriteRenderer.sprite;
+            }
         }
     }
 
