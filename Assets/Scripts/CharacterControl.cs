@@ -145,13 +145,13 @@ public class CharacterControl : MonoBehaviour
                     rb2d.AddForce(new Vector2(-adjustedDashForce, 0f));
             }
             if (dashRemaining > 0)
-                dashRemaining -= Time.fixedDeltaTime;
+                dashRemaining -= Time.deltaTime;
 
             if (dashFloatRemaining > 0)
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
                 rb2d.gravityScale = 0;
-                dashFloatRemaining -= Time.fixedDeltaTime;
+                dashFloatRemaining -= Time.deltaTime;
             }
             else
                 rb2d.gravityScale = gravityScale;
@@ -164,10 +164,10 @@ public class CharacterControl : MonoBehaviour
             if (hovering && !grounded && hoverRemaining > 0 && hoverRemaining <= 0.1 && canJump)
                 rb2d.AddForce(new Vector2(0f, hoverForce));
             if (hoverRemaining > 0)
-                hoverRemaining -= Time.fixedDeltaTime;
+                hoverRemaining -= Time.deltaTime;
 
             if (groundedRemaining > 0)
-                groundedRemaining -= Time.fixedDeltaTime;
+                groundedRemaining -= Time.deltaTime;
 
             if (jump)
             {
@@ -190,7 +190,7 @@ public class CharacterControl : MonoBehaviour
             rb2d.gravityScale = 0;
         }
         if (deathRemaining > 0)
-            deathRemaining -= Time.fixedDeltaTime;
+            deathRemaining -= Time.deltaTime;
     }
 
     private void CapSpeed()
