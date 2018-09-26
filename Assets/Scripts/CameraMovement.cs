@@ -38,7 +38,7 @@ public class CameraMovement : MonoBehaviour
         cameraWidth = camera.orthographicSize * 16f / 9;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!isMoving)
         {
@@ -65,12 +65,12 @@ public class CameraMovement : MonoBehaviour
         }
         else if (moveAmount < 1)
         {
-            moveAmount += Time.deltaTime / screenTransitionLength;
+            moveAmount += Time.fixedDeltaTime / screenTransitionLength;
             transform.position = Vector3.Lerp(moveOrigin, moveTarget, getAdjustedMoveAmount(moveAmount));
             characterControl.hasControl = false;
 
             var moveDirection = (moveTarget - moveOrigin).normalized;
-            character.Translate(moveDirection * transitionMovement * Time.deltaTime);
+            character.Translate(moveDirection * transitionMovement * Time.fixedDeltaTime);
         }
         else
         {
