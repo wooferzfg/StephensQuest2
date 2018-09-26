@@ -87,7 +87,7 @@ public class CharacterControl : MonoBehaviour
                     else
                         dashRemaining = 0;
                 }
-                else if (!grounded && !usedDoubleJump && canDoubleJump)
+                else if (!usedDoubleJump && canDoubleJump)
                 {
                     DoJump();
                     usedDoubleJump = true;
@@ -190,9 +190,10 @@ public class CharacterControl : MonoBehaviour
             }
             rb2d.Sleep();
             rb2d.gravityScale = 0;
+
+            if (deathRemaining > 0)
+                deathRemaining -= Time.deltaTime;
         }
-        if (deathRemaining > 0)
-            deathRemaining -= Time.deltaTime;
     }
 
     private void CapSpeed()
