@@ -201,10 +201,20 @@ public class Connection
 
     public Connection(int startRow, int startColumn, int endRow, int endColumn)
     {
-        StartRow = startRow;
-        StartColumn = startColumn;
-        EndRow = endRow;
-        EndColumn = endColumn;
+        if (startRow < endRow || startColumn < endColumn)
+        {
+            StartRow = startRow;
+            StartColumn = startColumn;
+            EndRow = endRow;
+            EndColumn = endColumn;
+        }
+        else
+        {
+            StartRow = endRow;
+            StartColumn = endColumn;
+            EndRow = startRow;
+            EndColumn = startColumn;
+        }
     }
 
     public override bool Equals(object obj)
