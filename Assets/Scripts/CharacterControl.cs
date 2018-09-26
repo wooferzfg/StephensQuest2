@@ -30,7 +30,6 @@ public class CharacterControl : MonoBehaviour
     private float hyperDashTime = 0.06f;
     private float groundedDelay = 0.05f;
     private float deathDelay = 0.25f;
-    private int groundLayerMask = 1 << LayerMask.NameToLayer("Ground");
 
     private float h = 0;
     private float hoverRemaining = 0;
@@ -40,6 +39,7 @@ public class CharacterControl : MonoBehaviour
     private float deathRemaining = 0;
     private bool prevHadControl = false;
     private Vector2 savedVelocity;
+    private int groundLayerMask;
 
     private Rigidbody2D rb2d;
     private CharacterSprite sprite;
@@ -51,6 +51,7 @@ public class CharacterControl : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         sprite = GetComponent<CharacterSprite>();
         map = GameObject.Find("Main Camera").GetComponent<DrawMap>();
+        groundLayerMask = 1 << LayerMask.NameToLayer("Ground");
     }
 
     void Update()
