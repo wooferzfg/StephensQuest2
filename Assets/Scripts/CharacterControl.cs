@@ -58,7 +58,7 @@ public class CharacterControl : MonoBehaviour
     {
         if (hasControl && deathRemaining <= 0)
         {
-            h = Input.GetAxisRaw("Horizontal");
+            h = Input.GetAxisRaw("Movement");
 
             var noWalls = !Physics2D.Linecast(transform.position, transform.position + new Vector3(0.3f, 0, 0), groundLayerMask)
                         && !Physics2D.Linecast(transform.position, transform.position + new Vector3(-0.3f, 0, 0), groundLayerMask);
