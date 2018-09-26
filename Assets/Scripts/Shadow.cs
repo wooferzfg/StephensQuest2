@@ -8,14 +8,16 @@ public class Shadow : MonoBehaviour {
     private float initialAlpha = 0.05f;
     private float fadeRate = 0.3f;
 
-    void Awake () {
+    void Awake ()
+    {
         sprite = GetComponent<SpriteRenderer>();
         character = GameObject.Find("Character").GetComponent<CharacterControl>();
         transform.Translate(new Vector3(0, 0, 10));
         setAlpha(initialAlpha);
     }
     
-    void Update () {
+    void Update ()
+    {
         if (character.hasControl)
         {
             var newAlpha = Mathf.Max(sprite.color.a - Time.deltaTime * fadeRate, 0);
@@ -30,7 +32,8 @@ public class Shadow : MonoBehaviour {
         }
     }
 
-    private void setAlpha(float newAlpha) {
+    private void setAlpha(float newAlpha)
+    {
         sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, newAlpha);
     }
 }
