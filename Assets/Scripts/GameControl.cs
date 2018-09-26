@@ -26,7 +26,7 @@ public class GameControl : MonoBehaviour
     private CharacterControl player;
     private DrawMap map;
 
-    void Awake()
+    private void Awake()
     {
         timer = GameObject.Find("Timer").GetComponent<Text>();
         finalTimer = GameObject.Find("FinalTimer").GetComponent<Text>();
@@ -43,7 +43,7 @@ public class GameControl : MonoBehaviour
             StartGame();
     }
 
-    void Update()
+    private void Update()
     {
         if (!gameStarted && Input.GetButtonDown("Jump"))
             StartGame();

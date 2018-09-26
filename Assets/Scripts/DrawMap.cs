@@ -30,7 +30,7 @@ public class DrawMap : MonoBehaviour
     private List<List<RoomType>> roomTypes;
     private List<Connection> connections;
 
-    void Awake ()
+    private void Awake ()
     {
         panel = GameObject.Find("Panel").transform;
         game = GameObject.Find("Character").GetComponent<GameControl>();
@@ -39,7 +39,7 @@ public class DrawMap : MonoBehaviour
         InitializeRooms();
     }
 
-    void Update()
+    private void Update()
     {
         if (canViewMap && !game.timerEnded)
         {

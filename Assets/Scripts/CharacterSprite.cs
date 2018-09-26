@@ -13,14 +13,14 @@ public class CharacterSprite : MonoBehaviour
     private float timeBetweenShadows = 0.05f;
     private float timeRemaining;
 
-    void Start()
+    private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         character = GetComponent<CharacterControl>();
         timeRemaining = timeBetweenShadows;
     }
 
-    void Update()
+    private void Update()
     {
         if (character.hasControl)
         {

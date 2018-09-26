@@ -23,7 +23,7 @@ public class CameraMovement : MonoBehaviour
     private Vector3 moveTarget;
     private Vector3 moveOrigin;
 
-    void Awake()
+    private void Awake()
     {
         character = GameObject.Find("Character").transform;
         characterControl = character.GetComponent<CharacterControl>();
@@ -38,7 +38,7 @@ public class CameraMovement : MonoBehaviour
         cameraWidth = camera.orthographicSize * 16f / 9;
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (!isMoving)
         {

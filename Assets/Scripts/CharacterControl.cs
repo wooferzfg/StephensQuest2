@@ -15,6 +15,7 @@ public class CharacterControl : MonoBehaviour
     public bool hovering = false;
     public bool usedDoubleJump = true;
     public bool usedDash = true;
+    public float deathRemaining = 0;
 
     private float gravityScale = 2.6f;
     private float moveForce = 30f;
@@ -36,7 +37,6 @@ public class CharacterControl : MonoBehaviour
     private float dashRemaining = 0;
     private float dashFloatRemaining = 0;
     private float groundedRemaining = 0;
-    private float deathRemaining = 0;
     private bool prevHadControl = false;
     private Vector2 savedVelocity;
     private int groundLayerMask;
@@ -45,7 +45,7 @@ public class CharacterControl : MonoBehaviour
     private CharacterSprite sprite;
     private DrawMap map;
 
-    void Awake()
+    private void Awake()
     {
         checkpoint = transform.position;
         rb2d = GetComponent<Rigidbody2D>();
@@ -54,7 +54,7 @@ public class CharacterControl : MonoBehaviour
         groundLayerMask = 1 << LayerMask.NameToLayer("Ground");
     }
 
-    void Update()
+    private void Update()
     {
         if (hasControl && deathRemaining <= 0)
         {
@@ -117,7 +117,7 @@ public class CharacterControl : MonoBehaviour
         dashFloatRemaining = 0;
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (hasControl && deathRemaining <= 0)
         {
@@ -213,7 +213,7 @@ public class CharacterControl : MonoBehaviour
                                     verticalSpeed * Mathf.Sign(rb2d.velocity.y));
     }
 
-    void UpdateSprite()
+    private void UpdateSprite()
     {
         var doubleJumpAvailable = canDoubleJump && !usedDoubleJump;
         var dashAvailable = canDash && !usedDash;
@@ -228,7 +228,7 @@ public class CharacterControl : MonoBehaviour
         sprite.SetSprite(spriteNum);
     }
 
-    void Flip()
+    private void Flip()
     {
         faceDirection = -faceDirection;
         Vector3 theScale = transform.localScale;

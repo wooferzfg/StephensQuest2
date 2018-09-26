@@ -8,7 +8,7 @@ public class Shadow : MonoBehaviour {
     private float initialAlpha = 0.05f;
     private float fadeRate = 0.3f;
 
-    void Awake ()
+    private void Awake ()
     {
         sprite = GetComponent<SpriteRenderer>();
         character = GameObject.Find("Character").GetComponent<CharacterControl>();
@@ -16,7 +16,7 @@ public class Shadow : MonoBehaviour {
         setAlpha(initialAlpha);
     }
     
-    void Update ()
+    private void Update ()
     {
         if (character.hasControl)
         {

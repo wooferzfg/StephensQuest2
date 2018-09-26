@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TouchFinalOrb : MonoBehaviour
 {
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name == "Character")
         {

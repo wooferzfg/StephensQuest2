@@ -6,7 +6,7 @@ public class TouchAbility : MonoBehaviour
 {
     public int ability;
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name == "Character")
         {
