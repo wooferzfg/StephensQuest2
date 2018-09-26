@@ -8,11 +8,7 @@ public class CharacterControl : MonoBehaviour
     public bool canJump = false;
     public bool canDoubleJump = false;
     public bool canDash = false;
-    public Vector3 checkpoint;
-    public int faceDirection = 1;
     public bool grounded = false;
-    public bool jump = false;
-    public bool hovering = false;
     public bool usedDoubleJump = true;
     public bool usedDash = true;
     public float deathRemaining = 0;
@@ -33,6 +29,9 @@ public class CharacterControl : MonoBehaviour
     private float deathDelay = 0.25f;
 
     private float h = 0;
+    private int faceDirection = 1;
+    private bool jump = false;
+    private bool hovering = false;
     private float hoverRemaining = 0;
     private float dashRemaining = 0;
     private float dashFloatRemaining = 0;
@@ -44,13 +43,14 @@ public class CharacterControl : MonoBehaviour
     private Rigidbody2D rb2d;
     private CharacterSprite sprite;
     private DrawMap map;
+    private CameraMovement cameraMovement;
 
     private void Awake()
     {
-        checkpoint = transform.position;
         rb2d = GetComponent<Rigidbody2D>();
         sprite = GetComponent<CharacterSprite>();
         map = GameObject.Find("Main Camera").GetComponent<DrawMap>();
+        cameraMovement = map.GetComponent<CameraMovement>();
         groundLayerMask = 1 << LayerMask.NameToLayer("Ground");
     }
 
@@ -104,9 +104,8 @@ public class CharacterControl : MonoBehaviour
                 hovering = true;
             if (Input.GetButtonUp("Jump") && hovering)
                 hovering = false;
-
-            UpdateSprite();
         }
+        UpdateSprite();
     }
 
     private void DoJump()
@@ -240,19 +239,16 @@ public class CharacterControl : MonoBehaviour
     public void ResetCheckpoint()
     {
         rb2d.velocity = new Vector2(0, 0);
-        transform.position = checkpoint;
+        transform.position = cameraMovement.GetCurrentCheckpoint();
         jump = false;
         hovering = false;
+        usedDash = false;
+        usedDoubleJump = false;
         hoverRemaining = 0;
         dashRemaining = 0;
         dashFloatRemaining = 0;
         groundedRemaining = 0;
         deathRemaining = deathDelay;
-    }
-
-    public void SetCheckpoint(Vector3 pos)
-    {
-        checkpoint = new Vector3(pos.x, pos.y, checkpoint.z);
     }
 
     public void CollectAbility(int ability)

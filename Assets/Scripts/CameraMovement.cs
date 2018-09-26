@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    public float cameraHeight;
+    public float cameraWidth;
+
     private float topBound = 0f;
     private float leftBound = -32f;
     private float rightBound = 48f;
@@ -16,8 +19,6 @@ public class CameraMovement : MonoBehaviour
     private CharacterControl characterControl;
     private DrawMap map;
 
-    private float cameraHeight;
-    private float cameraWidth;
     private bool isMoving;
     private float moveAmount;
     private Vector3 moveTarget;
@@ -97,5 +98,10 @@ public class CameraMovement : MonoBehaviour
             moveOrigin = transform.position;
             isMoving = true;
         }
+    }
+
+    public Vector2 GetCurrentCheckpoint()
+    {
+        return CreateCheckpoint.GetCurrentCheckpoint(moveTarget.x, moveTarget.y, moveOrigin.x, moveOrigin.y);
     }
 }

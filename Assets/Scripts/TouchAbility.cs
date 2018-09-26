@@ -12,7 +12,6 @@ public class TouchAbility : MonoBehaviour
         {
             var charControl = other.GetComponent<CharacterControl>();
             charControl.CollectAbility(ability);
-            charControl.SetCheckpoint(transform.position);
             Destroy(gameObject);
         }
     }
