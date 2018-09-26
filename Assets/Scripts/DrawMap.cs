@@ -17,6 +17,11 @@ public class DrawMap : MonoBehaviour
     public GameObject verticalConnection;
     public bool canViewMap = false;
 
+    private int gridWidth = 6;
+    private int gridHeight = 6;
+    private int curRow = 0;
+    private int curColumn = 2;
+
     private Transform panel;
     private GameControl game;
     private Image orbIcon;
@@ -24,10 +29,6 @@ public class DrawMap : MonoBehaviour
     private List<List<Image>> rooms;
     private List<List<RoomType>> roomTypes;
     private List<Connection> connections;
-    private int gridWidth = 6;
-    private int gridHeight = 6;
-    private int curRow = 0;
-    private int curColumn = 2;
 
     void Awake ()
     {

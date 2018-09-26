@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class CharacterControl : MonoBehaviour
 {
+    public bool hasControl = false;
+    public bool canJump = false;
+    public bool canDoubleJump = false;
+    public bool canDash = false;
+    public Vector3 checkpoint;
     public int faceDirection = 1;
+    public bool grounded = false;
     public bool jump = false;
     public bool hovering = false;
     public bool usedDoubleJump = true;
     public bool usedDash = true;
-
-    public bool hasControl = false;
-    public Vector2 savedVelocity;
-    
-    private bool prevHadControl = false;
 
     private float gravityScale = 2.6f;
     private float moveForce = 30f;
@@ -29,19 +30,16 @@ public class CharacterControl : MonoBehaviour
     private float hyperDashTime = 0.06f;
     private float groundedDelay = 0.05f;
     private float deathDelay = 0.25f;
+    private int groundLayerMask = 1 << LayerMask.NameToLayer("Ground");
 
-    public Vector3 checkpoint;
-    public bool canJump = false;
-    public bool canDoubleJump = false;
-    public bool canDash = false;
-
-    private bool grounded = false;
     private float h = 0;
     private float hoverRemaining = 0;
     private float dashRemaining = 0;
     private float dashFloatRemaining = 0;
     private float groundedRemaining = 0;
     private float deathRemaining = 0;
+    private bool prevHadControl = false;
+    private Vector2 savedVelocity;
 
     private Rigidbody2D rb2d;
     private CharacterSprite sprite;
@@ -61,11 +59,11 @@ public class CharacterControl : MonoBehaviour
         {
             h = Input.GetAxisRaw("Horizontal");
 
-            bool noWalls = !Physics2D.Linecast(transform.position, transform.position + new Vector3(0.3f, 0, 0), 1 << LayerMask.NameToLayer("Ground"))
-                        && !Physics2D.Linecast(transform.position, transform.position + new Vector3(-0.3f, 0, 0), 1 << LayerMask.NameToLayer("Ground"));
-            bool groundBelow = Physics2D.Linecast(transform.position, transform.position + new Vector3(0, -0.3f, 0), 1 << LayerMask.NameToLayer("Ground"));
-            grounded = (Physics2D.Linecast(transform.position + new Vector3(0.25f, 0, 0), transform.position + new Vector3(0.25f, -0.3f, 0), 1 << LayerMask.NameToLayer("Ground"))
-                    || Physics2D.Linecast(transform.position + new Vector3(-0.25f, 0, 0), transform.position + new Vector3(-0.25f, -0.3f, 0), 1 << LayerMask.NameToLayer("Ground")))
+            var noWalls = !Physics2D.Linecast(transform.position, transform.position + new Vector3(0.3f, 0, 0), groundLayerMask)
+                        && !Physics2D.Linecast(transform.position, transform.position + new Vector3(-0.3f, 0, 0), groundLayerMask);
+            var groundBelow = Physics2D.Linecast(transform.position, transform.position + new Vector3(0, -0.3f, 0), groundLayerMask);
+            grounded = (Physics2D.Linecast(transform.position + new Vector3(0.25f, 0, 0), transform.position + new Vector3(0.25f, -0.3f, 0), groundLayerMask)
+                    || Physics2D.Linecast(transform.position + new Vector3(-0.25f, 0, 0), transform.position + new Vector3(-0.25f, -0.3f, 0), groundLayerMask))
                     && (noWalls || groundBelow);
 
             if (grounded && (dashFloatRemaining <= 0 || groundedRemaining > 0))
@@ -130,10 +128,10 @@ public class CharacterControl : MonoBehaviour
                 rb2d.gravityScale = gravityScale;
             }
 
-            bool canMoveAir = !Physics2D.Linecast(transform.position + new Vector3(0, 0.25f, 0), transform.position + new Vector3(0.35f * faceDirection, 0.25f, 0), 1 << LayerMask.NameToLayer("Ground"))
-                && !Physics2D.Linecast(transform.position + new Vector3(0, -0.25f, 0), transform.position + new Vector3(0.35f * faceDirection, -0.25f, 0), 1 << LayerMask.NameToLayer("Ground"));
-            bool canMoveGround = grounded && !Physics2D.Linecast(transform.position + new Vector3(0, 0, 0), transform.position + new Vector3(0.35f * faceDirection, 0, 0), 1 << LayerMask.NameToLayer("Ground"));
-            bool canMove = canMoveAir || canMoveGround;
+            var canMoveAir = !Physics2D.Linecast(transform.position + new Vector3(0, 0.25f, 0), transform.position + new Vector3(0.35f * faceDirection, 0.25f, 0), groundLayerMask)
+                && !Physics2D.Linecast(transform.position + new Vector3(0, -0.25f, 0), transform.position + new Vector3(0.35f * faceDirection, -0.25f, 0), groundLayerMask);
+            var canMoveGround = grounded && !Physics2D.Linecast(transform.position + new Vector3(0, 0, 0), transform.position + new Vector3(0.35f * faceDirection, 0, 0), groundLayerMask);
+            var canMove = canMoveAir || canMoveGround;
 
             if (h * rb2d.velocity.x < maxHorizontalSpeed && canMove)
                 rb2d.AddForce(Vector2.right * h * moveForce);
@@ -216,8 +214,8 @@ public class CharacterControl : MonoBehaviour
 
     void UpdateSprite()
     {
-        bool doubleJumpAvailable = canDoubleJump && !usedDoubleJump;
-        bool dashAvailable = canDash && !usedDash;
+        var doubleJumpAvailable = canDoubleJump && !usedDoubleJump;
+        var dashAvailable = canDash && !usedDash;
 
         int spriteNum = 0;
         if (doubleJumpAvailable && dashAvailable)
