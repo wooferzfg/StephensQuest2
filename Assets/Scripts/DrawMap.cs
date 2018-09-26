@@ -222,8 +222,7 @@ public class Connection
 
     public override int GetHashCode()
     {
-        var result = 0;
-        result = (result * 397) ^ StartRow;
+        var result = StartRow;
         result = (result * 397) ^ StartColumn;
         result = (result * 397) ^ EndRow;
         result = (result * 397) ^ EndColumn;
