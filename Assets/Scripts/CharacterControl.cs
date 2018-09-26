@@ -25,7 +25,7 @@ public class CharacterControl : MonoBehaviour
     private float hoverTime = 0.15f;
     private float dashForce = 800;
     private float dashTime = 0.08f;
-    private float dashFloatTime = 0.2f;
+    private float dashFloatTime = 0.17f;
     private float hyperDashTime = 0.06f;
     private float groundedDelay = 0.05f;
     private float deathDelay = 0.25f;
@@ -150,8 +150,11 @@ public class CharacterControl : MonoBehaviour
             if (dashFloatRemaining > 0)
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
+                rb2d.gravityScale = 0;
                 dashFloatRemaining -= Time.fixedDeltaTime;
             }
+            else
+                rb2d.gravityScale = gravityScale;
 
             CapSpeed();
 
