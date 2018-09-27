@@ -23,6 +23,8 @@ public class CameraMovement : MonoBehaviour
     private float moveAmount;
     private Vector3 moveTarget;
     private Vector3 moveOrigin;
+    private int rowDelta;
+    private int columnDelta;
 
     private void Awake()
     {
@@ -45,29 +47,25 @@ public class CameraMovement : MonoBehaviour
         {
             if (character.position.x > transform.position.x + cameraWidth)
             {
-                setMoveTarget(cameraWidth * 2, 0);
-                map.MoveRight();
+                SetMoveTarget(1, 0);
             }
             else if (character.position.x < transform.position.x - cameraWidth)
             {
-                setMoveTarget(-cameraWidth * 2, 0);
-                map.MoveLeft();
+                SetMoveTarget(-1, 0);
             }
             else if (character.position.y > transform.position.y + cameraHeight)
             {
-                setMoveTarget(0, cameraHeight * 2);
-                map.MoveUp();
+                SetMoveTarget(0, 1);
             }
             else if (character.position.y < transform.position.y - cameraHeight)
             {
-                setMoveTarget(0, -cameraHeight * 2);
-                map.MoveDown();
+                SetMoveTarget(0, -1);
             }
         }
         else if (moveAmount < 1)
         {
             moveAmount += Time.deltaTime / screenTransitionLength;
-            transform.position = Vector3.Lerp(moveOrigin, moveTarget, getAdjustedMoveAmount(moveAmount));
+            transform.position = Vector3.Lerp(moveOrigin, moveTarget, GetAdjustedMoveAmount(moveAmount));
             characterControl.hasControl = false;
 
             var moveDirection = (moveTarget - moveOrigin).normalized;
@@ -80,18 +78,21 @@ public class CameraMovement : MonoBehaviour
             characterControl.hasControl = true;
             characterControl.usedDash = false;
             characterControl.usedDoubleJump = false;
+            map.MoveBetweenRooms(rowDelta, columnDelta);
         }
     }
 
-    private float getAdjustedMoveAmount(float t)
+    private float GetAdjustedMoveAmount(float t)
     {
         return 1 - Mathf.Pow(t - 1, 2);
     }
 
-    private void setMoveTarget(float targetX, float targetY)
+    private void SetMoveTarget(int deltaX, int deltaY)
     {
-        var newX = Mathf.Round(transform.position.x + targetX);
-        var newY = Mathf.Round(transform.position.y + targetY);
+        rowDelta = -deltaY;
+        columnDelta = deltaX;
+        var newX = Mathf.Round(transform.position.x + deltaX * cameraWidth * 2);
+        var newY = Mathf.Round(transform.position.y + deltaY * cameraHeight * 2);
         if (newX >= leftBound && newX <= rightBound && newY >= bottomBound && newY <= topBound)
         {
             moveTarget = new Vector3(newX, newY, transform.position.z);

@@ -9,8 +9,8 @@ public class CharacterControl : MonoBehaviour
     public bool canDoubleJump = false;
     public bool canDash = false;
     public bool grounded = false;
-    public bool usedDoubleJump = true;
-    public bool usedDash = true;
+    public bool usedDoubleJump = false;
+    public bool usedDash = false;
     public float deathRemaining = 0;
 
     private float gravityScale = 2.6f;

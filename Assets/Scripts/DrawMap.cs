@@ -160,28 +160,9 @@ public class DrawMap : MonoBehaviour
         newConnection.UIElement = connectionUI;
     }
 
-    public void MoveUp()
+    public void MoveBetweenRooms(int rowDelta, int columnDelta)
     {
-        int newRow = curRow - 1;
-        AddNewVisit(newRow, curColumn);
-    }
-
-    public void MoveLeft()
-    {
-        int newColumn = curColumn - 1;
-        AddNewVisit(curRow, newColumn);
-    }
-
-    public void MoveRight()
-    {
-        int newColumn = curColumn + 1;
-        AddNewVisit(curRow, newColumn);
-    }
-
-    public void MoveDown()
-    {
-        int newRow = curRow + 1;
-        AddNewVisit(newRow, curColumn);
+        AddNewVisit(curRow + rowDelta, curColumn + columnDelta);
     }
 
     public void Collected(RoomType item)

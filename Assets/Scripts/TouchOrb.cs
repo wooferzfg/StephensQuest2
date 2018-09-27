@@ -19,7 +19,7 @@ public class TouchOrb : MonoBehaviour
     {
         if (collected)
         {
-            if (character.grounded)
+            if (character.grounded || !character.hasControl)
             {
                 character.GetComponent<GameControl>().CollectOrb();
                 Destroy(gameObject);
