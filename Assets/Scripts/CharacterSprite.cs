@@ -11,27 +11,37 @@ public class CharacterSprite : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private CharacterControl character;
     private float timeBetweenShadows = 0.05f;
-    private float timeRemaining;
+    private float timeBetweenDashShadows = 0.0167f;
+    private float currentTime;
 
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         character = GetComponent<CharacterControl>();
-        timeRemaining = timeBetweenShadows;
+        currentTime = 0;
     }
 
     private void Update()
     {
         if (character.hasControl)
         {
-            timeRemaining -= Time.deltaTime;
-            if (timeRemaining <= 0)
+            currentTime += Time.deltaTime;
+            var curTimeBetweenShadows = GetTimeBetweenShadows();
+            if (currentTime > curTimeBetweenShadows)
             {
-                timeRemaining += timeBetweenShadows;
+                currentTime -= curTimeBetweenShadows;
                 var newShadow = Instantiate(shadow, transform.position, Quaternion.identity);
                 newShadow.GetComponent<SpriteRenderer>().sprite = spriteRenderer.sprite;
             }
         }
+    }
+
+    private float GetTimeBetweenShadows()
+    {
+        if (character.dashRemaining > 0)
+            return timeBetweenDashShadows;
+
+        return timeBetweenShadows;
     }
 
     public void SetSprite(int spriteNum)

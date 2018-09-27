@@ -6,6 +6,7 @@ public class Shadow : MonoBehaviour {
     private SpriteRenderer sprite;
     private CharacterControl character;
     private float initialAlpha = 0.05f;
+    private float initialDashAlpha = 0.08f;
     private float fadeRate = 0.3f;
 
     private void Awake ()
@@ -13,7 +14,11 @@ public class Shadow : MonoBehaviour {
         sprite = GetComponent<SpriteRenderer>();
         character = GameObject.Find("Character").GetComponent<CharacterControl>();
         transform.Translate(new Vector3(0, 0, 10));
-        setAlpha(initialAlpha);
+
+        if (character.dashRemaining > 0)
+            setAlpha(initialDashAlpha);
+        else
+            setAlpha(initialAlpha);
     }
     
     private void Update ()

@@ -12,6 +12,7 @@ public class CharacterControl : MonoBehaviour
     public bool usedDoubleJump = false;
     public bool usedDash = false;
     public float deathRemaining = 0;
+    public float dashRemaining = 0;
 
     private float gravityScale = 2.6f;
     private float moveForce = 30f;
@@ -33,7 +34,6 @@ public class CharacterControl : MonoBehaviour
     private bool jump = false;
     private bool hovering = false;
     private float hoverRemaining = 0;
-    private float dashRemaining = 0;
     private float dashFloatRemaining = 0;
     private float groundedRemaining = 0;
     private bool prevHadControl = false;
