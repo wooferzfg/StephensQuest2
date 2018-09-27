@@ -53,13 +53,13 @@ public class GameControl : MonoBehaviour
             if (Input.GetButtonDown("Restart"))
                 SceneManager.LoadScene(0);
 
-            float totalSeconds = 0;
+            var totalSeconds = 0f;
             if (timerEnded)
                 totalSeconds = endTime - startTime;
             else
-                totalSeconds = Time.time - startTime;
-            TimeSpan curTime = TimeSpan.FromSeconds(totalSeconds);
-            string timeString = string.Format("{0:00}:{1:00}.{2:000}", curTime.Minutes, curTime.Seconds, curTime.Milliseconds);
+                totalSeconds = Time.fixedTime - startTime;
+            var curTime = TimeSpan.FromSeconds(totalSeconds);
+            var timeString = string.Format("{0:00}:{1:00}.{2:000}", curTime.Minutes, curTime.Seconds, curTime.Milliseconds);
 
             if (timerEnded)
             {
@@ -78,7 +78,7 @@ public class GameControl : MonoBehaviour
     {
         gameStarted = true;
         player.hasControl = true;
-        startTime = Time.time;
+        startTime = Time.fixedTime;
         panel.enabled = false;
         title.enabled = false;
         startGame.text = "";
