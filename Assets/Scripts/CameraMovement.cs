@@ -12,7 +12,7 @@ public class CameraMovement : MonoBehaviour
     private float rightBound = 48f;
     private float bottomBound = -45f;
 
-    private float screenTransitionLength = 1f;
+    private float screenTransitionLength = 0.7f;
     private float transitionMovement = 0.7f;
 
     private Transform character;
@@ -69,7 +69,7 @@ public class CameraMovement : MonoBehaviour
             characterControl.hasControl = false;
 
             var moveDirection = (moveTarget - moveOrigin).normalized;
-            character.Translate(moveDirection * transitionMovement * Time.deltaTime);
+            character.Translate(moveDirection * transitionMovement * Time.deltaTime / screenTransitionLength);
         }
         else
         {
