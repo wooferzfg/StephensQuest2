@@ -238,8 +238,11 @@ public class CharacterControl : MonoBehaviour
 
     public void ResetCheckpoint()
     {
+        Vector3 checkpoint = cameraMovement.GetCurrentCheckpoint();
+        checkpoint.z = transform.position.z;
+        transform.position = checkpoint;
+
         rb2d.velocity = new Vector2(0, 0);
-        transform.position = cameraMovement.GetCurrentCheckpoint();
         jump = false;
         hovering = false;
         usedDash = false;
