@@ -9,14 +9,15 @@ public class CreateCheckpoint : MonoBehaviour
     public bool fromRight;
     public bool fromBottom;
 
-    private static Dictionary<CheckpointKey, Vector2> checkpoints = new Dictionary<CheckpointKey, Vector2>();
-
-    private CameraMovement cameraMovement;
+    private static Dictionary<CheckpointKey, Vector2> checkpoints;
+    private static CameraMovement cameraMovement;
 
     private void Awake()
     {
+        checkpoints = new Dictionary<CheckpointKey, Vector2>();
         GetComponent<SpriteRenderer>().sprite = null;
-        cameraMovement = GameObject.Find("Main Camera").GetComponent<CameraMovement>();
+        if (cameraMovement == null)
+            cameraMovement = GameObject.Find("Main Camera").GetComponent<CameraMovement>();
     }
 
     private void Start()
@@ -26,7 +27,7 @@ public class CreateCheckpoint : MonoBehaviour
 
     private void AddCheckpoint()
     {
-        var targetPosition = GetNearestRoom();
+        var targetPosition = GetNearestRoom(transform.position);
 
         var screenWidth = 2 * cameraMovement.cameraWidth;
         var screenHeight = 2 * cameraMovement.cameraHeight;
@@ -44,12 +45,12 @@ public class CreateCheckpoint : MonoBehaviour
         checkpoints.Add(key, transform.position);
     }
 
-    private Vector2 GetNearestRoom()
+    public static Vector2 GetNearestRoom(Vector2 position)
     {
         var screenWidth = 2 * cameraMovement.cameraWidth;
         var screenHeight = 2 * cameraMovement.cameraHeight;
-        var xPos = Mathf.Round(transform.position.x / screenWidth) * screenWidth;
-        var yPos = Mathf.Round(transform.position.y / screenHeight) * screenHeight;
+        var xPos = Mathf.Round(position.x / screenWidth) * screenWidth;
+        var yPos = Mathf.Round(position.y / screenHeight) * screenHeight;
         return new Vector2(xPos, yPos);
     }
 

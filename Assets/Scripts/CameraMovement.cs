@@ -6,6 +6,10 @@ public class CameraMovement : MonoBehaviour
 {
     public float cameraHeight;
     public float cameraWidth;
+    public bool isMoving;
+    public Vector3 moveTarget;
+    public Vector3 moveOrigin;
+    public float cycle = 0;
 
     private float topBound = 0f;
     private float leftBound = -32f;
@@ -19,10 +23,7 @@ public class CameraMovement : MonoBehaviour
     private CharacterControl characterControl;
     private DrawMap map;
 
-    private bool isMoving;
     private float moveAmount;
-    private Vector3 moveTarget;
-    private Vector3 moveOrigin;
     private int rowDelta;
     private int columnDelta;
 
@@ -61,6 +62,7 @@ public class CameraMovement : MonoBehaviour
             {
                 SetMoveTarget(0, -1);
             }
+            cycle += Time.deltaTime;
         }
         else if (moveAmount < 1)
         {
@@ -75,6 +77,7 @@ public class CameraMovement : MonoBehaviour
         {
             isMoving = false;
             moveAmount = 0;
+            cycle = 0;
             characterControl.hasControl = true;
             characterControl.usedDash = false;
             characterControl.usedDoubleJump = false;
