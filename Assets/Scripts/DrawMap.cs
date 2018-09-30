@@ -69,6 +69,7 @@ public class DrawMap : MonoBehaviour
                 curRoom.transform.SetParent(panel);
                 var roomImage = curRoom.GetComponent<Image>();
                 roomImage.rectTransform.localPosition = GetRoomPosition(i, j);
+                roomImage.rectTransform.localScale = Vector3.one;
                 roomImage.enabled = false;
                 curRow.Add(roomImage);
                 curRoomTypeRow.Add(RoomType.None);
