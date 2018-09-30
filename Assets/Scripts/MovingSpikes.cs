@@ -72,7 +72,7 @@ public class MovingSpikes : MonoBehaviour
         else
             nextNode = nodes[i + 1];
 
-        transform.position = Vector3.Lerp(nodes[i], nextNode, timeRemaining);
+        transform.position = Vector3.Lerp(nodes[i], nextNode, timeRemaining / times[i]);
     }
 
     private void OnDrawGizmos()
@@ -96,7 +96,7 @@ public class MovingSpikes : MonoBehaviour
 
     private bool VectorsEqual(Vector2 a, Vector2 b)
     {
-        return (int)a.x == (int)b.x
-            && (int)a.y == (int)b.y;
+        return (int)Mathf.Round(a.x) == (int)Mathf.Round(b.x)
+            && (int)Mathf.Round(a.y) == (int)Mathf.Round(b.y);
     }
 }
