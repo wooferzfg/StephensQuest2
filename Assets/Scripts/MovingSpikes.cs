@@ -24,7 +24,7 @@ public class MovingSpikes : MonoBehaviour
         currentRoom = CreateCheckpoint.GetNearestRoom(transform.position);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (nodes.Count > 1)
         {
