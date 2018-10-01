@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class GameControl : MonoBehaviour
 {
-    public static bool gameStarted = false;
+    public bool gameStarted = false;
 
     public int orbs = 0;
     public float startTime;
@@ -38,9 +38,6 @@ public class GameControl : MonoBehaviour
         map = GameObject.Find("Main Camera").GetComponent<DrawMap>();
 
         UpdateOrbText();
-
-        if (gameStarted)
-            StartGame();
     }
 
     private void Update()
