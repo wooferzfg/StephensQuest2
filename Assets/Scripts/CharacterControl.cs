@@ -26,7 +26,7 @@ public class CharacterControl : MonoBehaviour
     private float dashTime = 0.08f;
     private float dashFloatTime = 0.17f;
     private float hyperDashTime = 0.06f;
-    private float groundedDelay = 0.05f;
+    private float groundedDelay = 0.08f;
     private float deathDelay = 0.25f;
 
     private float h = 0;
