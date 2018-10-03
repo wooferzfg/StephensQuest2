@@ -15,7 +15,7 @@ public class GameControl : MonoBehaviour
     public float endTime;
     public bool timerEnded = false;
 
-    private int totalOrbs = 31;
+    private int totalOrbs = 20;
 
     private Text timer;
     private Text finalTimer;

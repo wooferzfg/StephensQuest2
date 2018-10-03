@@ -17,10 +17,10 @@ public class DrawMap : MonoBehaviour
     public GameObject verticalConnection;
     public bool canViewMap = false;
 
-    private int gridWidth = 6;
-    private int gridHeight = 6;
+    private int gridWidth = 5;
+    private int gridHeight = 5;
     private int curRow = 0;
-    private int curColumn = 2;
+    private int curColumn = 1;
 
     private Transform panel;
     private GameControl game;
@@ -100,7 +100,7 @@ public class DrawMap : MonoBehaviour
 
     private Vector3 GetRoomPosition(int row, int column)
     {
-        return new Vector3(-487.5f + column * 75, 187.5f - row * 75);
+        return new Vector3(-500f + column * 100, 200f - row * 100);
     }
 
     private Vector3 GetConnectionPosition(Connection connection)

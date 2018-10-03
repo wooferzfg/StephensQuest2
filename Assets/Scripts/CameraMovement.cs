@@ -12,9 +12,9 @@ public class CameraMovement : MonoBehaviour
     public float cycle = 0;
 
     private float topBound = 0f;
-    private float leftBound = -32f;
+    private float leftBound = -16f;
     private float rightBound = 48f;
-    private float bottomBound = -45f;
+    private float bottomBound = -36f;
 
     private float screenTransitionLength = 1f;
     private float transitionMovement = 0.7f;
