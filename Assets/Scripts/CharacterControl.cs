@@ -20,9 +20,9 @@ public class CharacterControl : MonoBehaviour
     private float maxVerticalSpeed = 12f;
     private float speedDecay = 0.4f;
     private float jumpForce = 320f;
-    private float hoverForce = 60f;
+    private float hoverForce = 75f;
     private float delayBeforeHover = 0.07f;
-    private float hoverTime = 0.1f;
+    private float hoverTime = 0.08f;
     private float dashForce = 800;
     private float dashTime = 0.08f;
     private float dashFloatTime = 0.17f;
