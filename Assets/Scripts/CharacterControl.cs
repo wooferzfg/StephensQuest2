@@ -21,7 +21,8 @@ public class CharacterControl : MonoBehaviour
     private float speedDecay = 0.4f;
     private float jumpForce = 320f;
     private float hoverForce = 60f;
-    private float hoverTime = 0.15f;
+    private float delayBeforeHover = 0.07f;
+    private float hoverTime = 0.1f;
     private float dashForce = 800;
     private float dashTime = 0.08f;
     private float dashFloatTime = 0.17f;
@@ -111,7 +112,7 @@ public class CharacterControl : MonoBehaviour
     private void DoJump()
     {
         jump = true;
-        hoverRemaining = hoverTime;
+        hoverRemaining = delayBeforeHover + hoverTime;
         groundedRemaining = 0;
         dashFloatRemaining = 0;
     }
@@ -161,7 +162,7 @@ public class CharacterControl : MonoBehaviour
             if (h != 0 && h != faceDirection)
                 Flip();
 
-            if (hovering && !grounded && hoverRemaining > 0 && hoverRemaining <= 0.1 && canJump)
+            if (hovering && !grounded && hoverRemaining > 0 && hoverRemaining <= hoverTime && canJump)
                 rb2d.AddForce(new Vector2(0f, hoverForce));
             if (hoverRemaining > 0)
                 hoverRemaining -= Time.deltaTime;
