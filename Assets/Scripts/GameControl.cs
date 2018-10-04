@@ -102,6 +102,6 @@ public class GameControl : MonoBehaviour
         map.ToggleMap(true);
         panel.enabled = true;
 
-        startGame.text = "Press the Restart Button to Start a New Game!";
+        startGame.text = "Press the Restart Button to Start a New Game";
     }
 }
