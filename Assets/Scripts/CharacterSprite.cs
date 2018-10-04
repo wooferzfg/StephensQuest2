@@ -11,7 +11,7 @@ public class CharacterSprite : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private CharacterControl character;
     private float timeBetweenShadows = 0.05f;
-    private float timeBetweenDashShadows = 0.01f;
+    private float timeBetweenDashShadows = 0.0167f;
     private float shadowAlpha = 0.05f;
     private float dashShadowAlpha = 0.08f;
     private float deadShadowAlpha = 0.2f;
@@ -32,7 +32,7 @@ public class CharacterSprite : MonoBehaviour
             var curTimeBetweenShadows = GetTimeBetweenShadows();
             if (currentTime > curTimeBetweenShadows)
             {
-                currentTime = 0;
+                currentTime = (currentTime - curTimeBetweenShadows) % curTimeBetweenShadows;
                 if (character.dashRemaining > 0)
                     CreateDashShadow();
                 else
