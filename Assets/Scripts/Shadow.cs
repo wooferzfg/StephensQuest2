@@ -5,8 +5,6 @@ using UnityEngine;
 public class Shadow : MonoBehaviour {
     private SpriteRenderer sprite;
     private CharacterControl character;
-    private float initialAlpha = 0.05f;
-    private float initialDashAlpha = 0.08f;
     private float fadeRate = 0.3f;
 
     private void Awake ()
@@ -14,11 +12,6 @@ public class Shadow : MonoBehaviour {
         sprite = GetComponent<SpriteRenderer>();
         character = GameObject.Find("Character").GetComponent<CharacterControl>();
         transform.Translate(new Vector3(0, 0, 10));
-
-        if (character.dashRemaining > 0)
-            setAlpha(initialDashAlpha);
-        else
-            setAlpha(initialAlpha);
     }
     
     private void Update ()
@@ -32,12 +25,12 @@ public class Shadow : MonoBehaviour {
             }
             else
             {
-                setAlpha(newAlpha);
+                SetAlpha(newAlpha);
             }
         }
     }
 
-    private void setAlpha(float newAlpha)
+    public void SetAlpha(float newAlpha)
     {
         sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, newAlpha);
     }

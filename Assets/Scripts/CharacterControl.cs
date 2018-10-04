@@ -239,6 +239,8 @@ public class CharacterControl : MonoBehaviour
 
     public void ResetCheckpoint()
     {
+        sprite.CreateDeadShadow();
+
         Vector3 checkpoint = cameraMovement.GetCurrentCheckpoint();
         checkpoint.z = transform.position.z;
         transform.position = checkpoint;
