@@ -16,7 +16,7 @@ public class CameraMovement : MonoBehaviour
     private float rightBound = 48f;
     private float bottomBound = -36f;
 
-    private float screenTransitionLength = 1f;
+    private float screenTransitionLength = 0.5f;
     private float transitionMovement = 0.7f;
 
     private Transform character;
@@ -66,12 +66,13 @@ public class CameraMovement : MonoBehaviour
         }
         else if (moveAmount < 1)
         {
-            moveAmount += Time.deltaTime / screenTransitionLength;
+            var transitionIncrement = Time.deltaTime / screenTransitionLength;
+            var moveDirection = (moveTarget - moveOrigin).normalized;
+
+            moveAmount += transitionIncrement;
             transform.position = Vector3.Lerp(moveOrigin, moveTarget, GetAdjustedMoveAmount(moveAmount));
             characterControl.hasControl = false;
-
-            var moveDirection = (moveTarget - moveOrigin).normalized;
-            character.Translate(moveDirection * transitionMovement * Time.deltaTime);
+            character.Translate(moveDirection * transitionMovement * transitionIncrement);
         }
         else
         {
@@ -87,7 +88,7 @@ public class CameraMovement : MonoBehaviour
 
     private float GetAdjustedMoveAmount(float t)
     {
-        return 1 - Mathf.Pow(t - 1, 2);
+        return 1 - Mathf.Pow(t - 1, 4);
     }
 
     private void SetMoveTarget(int deltaX, int deltaY)
