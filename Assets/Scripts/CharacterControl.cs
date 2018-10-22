@@ -77,7 +77,7 @@ public class CharacterControl : MonoBehaviour
                     usedDash = false;
             }
 
-            if (Input.GetButtonDown("Jump"))
+            if (!star && Input.GetButtonDown("Jump"))
             {
                 if (groundedRemaining > 0 && canJump)
                 {
