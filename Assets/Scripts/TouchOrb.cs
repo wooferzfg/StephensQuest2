@@ -28,10 +28,10 @@ public class TouchOrb : MonoBehaviour
             {
                 collected = false;
             }
-            setAlpha(0.5f);
+            SetAlpha(0.5f);
         }
         else
-            setAlpha(1f);
+            SetAlpha(1f);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -42,7 +42,7 @@ public class TouchOrb : MonoBehaviour
         }
     }
 
-    private void setAlpha(float newAlpha)
+    private void SetAlpha(float newAlpha)
     {
         sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, newAlpha);
     }

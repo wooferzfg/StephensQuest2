@@ -34,6 +34,7 @@ public class CharacterControl : MonoBehaviour
     private int faceDirection = 1;
     private bool jump = false;
     private bool hovering = false;
+    private bool star = false;
     private float hoverRemaining = 0;
     private float dashFloatRemaining = 0;
     private float groundedRemaining = 0;
@@ -80,12 +81,7 @@ public class CharacterControl : MonoBehaviour
             {
                 if (groundedRemaining > 0 && canJump)
                 {
-                    DoJump();
-                    usedDash = false;
-                    if (dashRemaining > 0 && h != 0)
-                        dashRemaining += hyperDashTime;
-                    else
-                        dashRemaining = 0;
+                    DoNormalJump();
                 }
                 else if (!usedDoubleJump && canDoubleJump)
                 {
@@ -107,6 +103,24 @@ public class CharacterControl : MonoBehaviour
                 hovering = false;
         }
         UpdateSprite();
+    }
+
+    public void StarJump()
+    {
+        DoNormalJump();
+        star = true;
+        hoverRemaining = hoverTime;
+    }
+
+    private void DoNormalJump()
+    {
+        DoJump();
+        usedDash = false;
+        usedDoubleJump = false;
+        if (dashRemaining > 0 && h != 0)
+            dashRemaining += hyperDashTime;
+        else
+            dashRemaining = 0;
     }
 
     private void DoJump()
@@ -162,10 +176,12 @@ public class CharacterControl : MonoBehaviour
             if (h != 0 && h != faceDirection)
                 Flip();
 
-            if (hovering && !grounded && hoverRemaining > 0 && hoverRemaining <= hoverTime && canJump)
+            if ((star || hovering) && !grounded && hoverRemaining > 0 && (star || hoverRemaining <= hoverTime) && canJump)
                 rb2d.AddForce(new Vector2(0f, hoverForce));
             if (hoverRemaining > 0)
                 hoverRemaining -= Time.deltaTime;
+            else
+                star = false;
 
             if (groundedRemaining > 0)
                 groundedRemaining -= Time.deltaTime;
