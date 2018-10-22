@@ -30,7 +30,13 @@ public class TouchStar : MonoBehaviour
         {
             var newAlpha = Mathf.Max(sprite.color.a - Time.deltaTime * fadeRate, 0);
             SetAlpha(newAlpha);
+        }
+    }
 
+    private void FixedUpdate()
+    {
+        if (collected)
+        {
             timeUntilRespawn -= Time.deltaTime;
             if (timeUntilRespawn < 0)
             {
