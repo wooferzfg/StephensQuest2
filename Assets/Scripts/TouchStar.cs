@@ -10,7 +10,7 @@ public class TouchStar : MonoBehaviour
     private float timeUntilActivation;
 
     private float respawnTime = 1f;
-    private float activationTime = 0.03f;
+    private float activationTime = 0.04f;
     private float fadeRate = 10f;
 
     private SpriteRenderer sprite;
