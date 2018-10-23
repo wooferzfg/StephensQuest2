@@ -77,11 +77,14 @@ public class CharacterControl : MonoBehaviour
                     usedDash = false;
             }
 
-            if (!star && Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump"))
             {
                 if (groundedRemaining > 0 && canJump)
                 {
-                    DoNormalJump();
+                    DoJump();
+                    usedDash = false;
+                    if (dashRemaining > 0)
+                        dashRemaining += hyperDashTime;
                 }
                 else if (!usedDoubleJump && canDoubleJump)
                 {
@@ -107,28 +110,22 @@ public class CharacterControl : MonoBehaviour
 
     public void StarJump()
     {
-        DoNormalJump();
-        star = true;
-        hoverRemaining = hoverTime;
-    }
-
-    private void DoNormalJump()
-    {
         DoJump();
         usedDash = false;
         usedDoubleJump = false;
-        if (dashRemaining > 0 && h != 0)
-            dashRemaining += hyperDashTime;
-        else
-            dashRemaining = 0;
+        star = true;
+        hoverRemaining = hoverTime;
     }
 
     private void DoJump()
     {
         jump = true;
+        star = false;
         hoverRemaining = delayBeforeHover + hoverTime;
         groundedRemaining = 0;
         dashFloatRemaining = 0;
+        if (h == 0)
+            dashRemaining = 0;
     }
 
     private void FixedUpdate()
@@ -180,8 +177,6 @@ public class CharacterControl : MonoBehaviour
                 rb2d.AddForce(new Vector2(0f, hoverForce));
             if (hoverRemaining > 0)
                 hoverRemaining -= Time.deltaTime;
-            else
-                star = false;
 
             if (groundedRemaining > 0)
                 groundedRemaining -= Time.deltaTime;
