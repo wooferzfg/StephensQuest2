@@ -210,16 +210,19 @@ public class CharacterControl : MonoBehaviour
     {
         var horizontalSpeed = Mathf.Abs(rb2d.velocity.x);
         var verticalSpeed = Mathf.Abs(rb2d.velocity.y);
-        if (horizontalSpeed > maxHorizontalSpeed)
+
+        if (grounded && h == 0)
+            horizontalSpeed = 0;
+        else if (horizontalSpeed > maxHorizontalSpeed)
         {
             horizontalSpeed = Mathf.Lerp(maxHorizontalSpeed, horizontalSpeed, speedDecay);
             if (horizontalSpeed <= maxHorizontalSpeed + 1)
                 horizontalSpeed = maxHorizontalSpeed;
         }
+
         if (verticalSpeed > maxVerticalSpeed)
-        {
             verticalSpeed = maxVerticalSpeed;
-        }
+
         rb2d.velocity = new Vector2(horizontalSpeed * Mathf.Sign(rb2d.velocity.x),
                                     verticalSpeed * Mathf.Sign(rb2d.velocity.y));
     }
@@ -245,7 +248,11 @@ public class CharacterControl : MonoBehaviour
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
-        rb2d.velocity = new Vector2(rb2d.velocity.x / 3, rb2d.velocity.y);
+
+        var newHorizontalVelocity = rb2d.velocity.x / 3;
+        if (grounded)
+            newHorizontalVelocity = 0;
+        rb2d.velocity = new Vector2(newHorizontalVelocity, rb2d.velocity.y);
     }
 
     public void ResetCheckpoint()
