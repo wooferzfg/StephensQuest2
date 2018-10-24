@@ -90,7 +90,7 @@ public class GameControl : MonoBehaviour
     
     private void UpdateOrbText()
     {
-        orbCount.text = orbs.ToString("D2") + "/" + totalOrbs;
+        orbCount.text = orbs.ToString() + "/" + totalOrbs;
     }
 
     public void CollectFinalOrb()
