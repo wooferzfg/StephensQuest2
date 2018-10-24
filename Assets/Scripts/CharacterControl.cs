@@ -266,6 +266,7 @@ public class CharacterControl : MonoBehaviour
         rb2d.velocity = new Vector2(0, 0);
         jump = false;
         hovering = false;
+        star = false;
         usedDash = false;
         usedDoubleJump = false;
         hoverRemaining = 0;

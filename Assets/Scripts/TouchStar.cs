@@ -47,7 +47,8 @@ public class TouchStar : MonoBehaviour
             timeUntilActivation -= Time.deltaTime;
             if (!activated && timeUntilActivation < 0)
             {
-                character.StarJump();
+                if (character.deathRemaining <= 0)
+                    character.StarJump();
                 activated = true;
             }
         }
