@@ -42,6 +42,9 @@ public class GameControl : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetButtonDown("Quit"))
+            Application.Quit();
+
         if (!gameStarted && Input.GetButtonDown("Jump"))
             StartGame();
 
@@ -101,7 +104,5 @@ public class GameControl : MonoBehaviour
         map.Collected(RoomType.FinalOrb);
         map.ToggleMap(true);
         panel.enabled = true;
-
-        startGame.text = "Press the Restart Button to Start a New Game";
     }
 }
