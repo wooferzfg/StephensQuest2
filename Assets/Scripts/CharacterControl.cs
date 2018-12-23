@@ -18,7 +18,8 @@ public class CharacterControl : MonoBehaviour
     private float moveForce = 45f;
     private float maxHorizontalSpeed = 5f;
     private float maxVerticalSpeed = 12f;
-    private float speedDecay = 0.4f;
+    private float maxSpeedDecay = 0.4f;
+    private float airSpeedDecay = 0.9f;
     private float jumpForce = 320f;
     private float hoverForce = 75f;
     private float delayBeforeHover = 0.06f;
@@ -211,11 +212,17 @@ public class CharacterControl : MonoBehaviour
         var horizontalSpeed = Mathf.Abs(rb2d.velocity.x);
         var verticalSpeed = Mathf.Abs(rb2d.velocity.y);
 
-        if (grounded && h == 0 && dashFloatRemaining <= 0)
-            horizontalSpeed = 0;
-        else if (horizontalSpeed > maxHorizontalSpeed)
+        if (grounded)
         {
-            horizontalSpeed = Mathf.Lerp(maxHorizontalSpeed, horizontalSpeed, speedDecay);
+            if (h == 0 && dashFloatRemaining <= 0)
+                horizontalSpeed = 0;
+        }
+        else if (h != Mathf.Sign(horizontalSpeed))
+            horizontalSpeed *= airSpeedDecay;
+
+        if (horizontalSpeed > maxHorizontalSpeed)
+        {
+            horizontalSpeed = Mathf.Lerp(maxHorizontalSpeed, horizontalSpeed, maxSpeedDecay);
             if (horizontalSpeed <= maxHorizontalSpeed + 1)
                 horizontalSpeed = maxHorizontalSpeed;
         }
@@ -249,7 +256,7 @@ public class CharacterControl : MonoBehaviour
         theScale.x *= -1;
         transform.localScale = theScale;
 
-        var newHorizontalVelocity = rb2d.velocity.x / 3;
+        var newHorizontalVelocity = rb2d.velocity.x / 2;
         if (grounded)
             newHorizontalVelocity = 0;
         rb2d.velocity = new Vector2(newHorizontalVelocity, rb2d.velocity.y);
