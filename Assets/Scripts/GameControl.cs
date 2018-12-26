@@ -25,6 +25,7 @@ public class GameControl : MonoBehaviour
     private Text orbCount;
     private CharacterControl player;
     private DrawMap map;
+    private GameObject instructions;
 
     private void Awake()
     {
@@ -36,6 +37,7 @@ public class GameControl : MonoBehaviour
         startGame = GameObject.Find("StartGame").GetComponent<Text>();
         orbCount = GameObject.Find("OrbCount").GetComponent<Text>();
         map = GameObject.Find("Main Camera").GetComponent<DrawMap>();
+        instructions = GameObject.Find("Instructions");
 
         UpdateOrbText();
     }
@@ -82,6 +84,7 @@ public class GameControl : MonoBehaviour
         panel.enabled = false;
         title.enabled = false;
         startGame.text = "";
+        Destroy(instructions);
     }
 
     public void CollectOrb()
