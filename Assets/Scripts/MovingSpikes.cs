@@ -11,6 +11,8 @@ public class MovingSpikes : MonoBehaviour
     private Vector2 currentRoom;
     private float totalTime;
 
+    private float rotationSpeed = 150f;
+
     private CameraMovement cameraMovement;
 
     private void Awake()
@@ -73,6 +75,7 @@ public class MovingSpikes : MonoBehaviour
             nextNode = nodes[i + 1];
 
         transform.position = Vector3.Lerp(nodes[i], nextNode, timeRemaining / times[i]);
+        transform.rotation = Quaternion.Euler(0, 0, cycle * rotationSpeed);
     }
 
     private void OnDrawGizmos()
