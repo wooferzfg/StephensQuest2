@@ -212,13 +212,13 @@ public class CharacterControl : MonoBehaviour
         var horizontalSpeed = Mathf.Abs(rb2d.velocity.x);
         var verticalSpeed = Mathf.Abs(rb2d.velocity.y);
 
-        if (grounded)
+        if (dashFloatRemaining <= 0)
         {
-            if (h == 0 && dashFloatRemaining <= 0)
+            if (grounded && h == 0)
                 horizontalSpeed = 0;
+            else if (!grounded && h != Mathf.Sign(horizontalSpeed))
+                horizontalSpeed *= airSpeedDecay;
         }
-        else if (h != Mathf.Sign(horizontalSpeed))
-            horizontalSpeed *= airSpeedDecay;
 
         if (horizontalSpeed > maxHorizontalSpeed)
         {
