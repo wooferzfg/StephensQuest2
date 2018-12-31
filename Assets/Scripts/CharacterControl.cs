@@ -63,13 +63,6 @@ public class CharacterControl : MonoBehaviour
         {
             h = Input.GetAxisRaw("Movement");
 
-            var noWalls = !CheckCollision(0, -0.25f, 0.3f, -0.25f)
-                       && !CheckCollision(0, -0.25f, -0.3f, -0.25f);
-            var groundBelow = CheckCollision(0, -0.25f, 0, -0.3f);
-            grounded = (CheckCollision(0.25f, -0.25f, 0.25f, -0.3f)
-                     || CheckCollision(-0.25f, -0.25f, -0.25f, -0.3f))
-                     && (noWalls || groundBelow);
-
             if (grounded && (dashFloatRemaining <= 0 || groundedRemaining > 0))
             {
                 groundedRemaining = groundedDelay;
@@ -141,10 +134,9 @@ public class CharacterControl : MonoBehaviour
                 rb2d.gravityScale = gravityScale;
             }
 
-            var canMoveAir = !CheckCollision(0, 0.25f, 0.35f * faceDirection, 0.25f)
-                          && !CheckCollision(0, -0.25f, 0.35f * faceDirection, -0.25f);
-            var canMoveGround = grounded && !CheckCollision(0, 0, 0.35f * faceDirection, 0);
-            var canMove = canMoveAir || canMoveGround;
+            SetGrounded();
+
+            var canMove = CanMove();
 
             if (h * rb2d.velocity.x < maxHorizontalSpeed && canMove)
                 rb2d.AddForce(Vector2.right * h * moveForce);
@@ -205,6 +197,24 @@ public class CharacterControl : MonoBehaviour
             if (deathRemaining > 0)
                 deathRemaining -= Time.deltaTime;
         }
+    }
+
+    private void SetGrounded()
+    {
+        var noWalls = !CheckCollision(0, -0.25f, 0.3f, -0.25f)
+                       && !CheckCollision(0, -0.25f, -0.3f, -0.25f);
+        var groundBelow = CheckCollision(0, -0.25f, 0, -0.3f);
+        grounded = (CheckCollision(0.25f, -0.25f, 0.25f, -0.3f)
+                 || CheckCollision(-0.25f, -0.25f, -0.25f, -0.3f))
+                 && (noWalls || groundBelow);
+    }
+
+    private bool CanMove()
+    {
+        var canMoveAir = !CheckCollision(0, 0.25f, 0.35f * faceDirection, 0.25f)
+                          && !CheckCollision(0, -0.25f, 0.35f * faceDirection, -0.25f);
+        var canMoveGround = grounded && !CheckCollision(0, 0, 0.35f * faceDirection, 0);
+        return canMoveAir || canMoveGround;
     }
 
     private bool CheckCollision(float startX, float startY, float endX, float endY)
