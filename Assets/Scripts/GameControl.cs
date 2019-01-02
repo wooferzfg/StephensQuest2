@@ -44,7 +44,7 @@ public class GameControl : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown("Quit"))
+        if (Input.GetButtonDown("Quit Game"))
             Application.Quit();
 
         if (!gameStarted && Input.GetButtonDown("Jump"))
@@ -52,7 +52,7 @@ public class GameControl : MonoBehaviour
 
         if (gameStarted)
         {
-            if (Input.GetButtonDown("Restart"))
+            if (Input.GetButtonDown("Restart Game"))
                 SceneManager.LoadScene(0);
 
             var totalSeconds = 0f;
