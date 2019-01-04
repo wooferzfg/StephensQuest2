@@ -7,6 +7,7 @@ public class CameraMovement : MonoBehaviour
     public float cameraHeight;
     public float cameraWidth;
     public bool isMoving;
+    public float moveAmount;
     public Vector3 moveTarget;
     public Vector3 moveOrigin;
     public float cycle = 0;
@@ -23,7 +24,6 @@ public class CameraMovement : MonoBehaviour
     private CharacterControl characterControl;
     private DrawMap map;
 
-    private float moveAmount;
     private int rowDelta;
     private int columnDelta;
 

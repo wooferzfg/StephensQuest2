@@ -7,19 +7,21 @@ public class TouchOrb : MonoBehaviour
     private bool collected;
     private CharacterControl character;
     private SpriteRenderer sprite;
+    private CameraMovement cameraMovement;
 
     private void Awake()
     {
         collected = false;
         character = GameObject.Find("Character").GetComponent<CharacterControl>();
         sprite = GetComponent<SpriteRenderer>();
+        cameraMovement = GameObject.Find("Main Camera").GetComponent<CameraMovement>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (collected)
         {
-            if (character.grounded || !character.hasControl)
+            if (ShouldOrbBeCollected())
             {
                 character.GetComponent<GameControl>().CollectOrb();
                 Destroy(gameObject);
@@ -32,6 +34,15 @@ public class TouchOrb : MonoBehaviour
         }
         else
             SetAlpha(1f);
+    }
+
+    private bool ShouldOrbBeCollected()
+    {
+        if (cameraMovement.isMoving)
+        {
+            return cameraMovement.moveAmount == 0;
+        }
+        return character.grounded;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
